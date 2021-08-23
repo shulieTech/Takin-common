@@ -1,0 +1,4 @@
+/Users/hezhongqi/aliyun_workspace/takin-common/takin-common-operation-log/takin-common-operation-log-api/src/main/java/io/shulie/takin/log/entity/OperationLogContext.java
+/Users/hezhongqi/aliyun_workspace/takin-common/takin-common-operation-log/takin-common-operation-log-api/src/main/java/io/shulie/takin/log/annoation/BizOperationLog.java
+/Users/hezhongqi/aliyun_workspace/takin-common/takin-common-operation-log/takin-common-operation-log-api/src/main/java/io/shulie/takin/log/operator/OperationLogContextHolder.java
+/Users/hezhongqi/aliyun_workspace/takin-common/takin-common-operation-log/takin-common-operation-log-api/src/main/java/io/shulie/takin/log/holder/OperationMessageHolder.java
