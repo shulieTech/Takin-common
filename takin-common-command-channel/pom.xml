@@ -28,8 +28,8 @@
     <artifactId>takin-common-command-channel</artifactId>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <logback.version>1.1.7</logback.version>
         <slf4j.version>1.7.6</slf4j.version>
@@ -105,8 +105,8 @@
                     <version>3.1</version>
                     <configuration>
                         <encoding>UTF-8</encoding>
-                        <source>1.8</source>
-                        <target>1.8</target>
+                        <source>1.6</source>
+                        <target>1.6</target>
                     </configuration>
                 </plugin>
             </plugins>
