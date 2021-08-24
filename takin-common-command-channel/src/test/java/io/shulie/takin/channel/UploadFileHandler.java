@@ -36,7 +36,7 @@ public class UploadFileHandler implements CommandHandler {
 
 
         CommandResponse response = new CommandResponse();
-        Map<String, Object> param = new HashMap<>(8);
+        Map<String, Object> param = new HashMap<String, Object>(8);
         param.put("test","test");
         response.setParam(param);
 

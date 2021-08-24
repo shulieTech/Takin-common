@@ -102,12 +102,13 @@ public class DefaultServerChannel implements ServerChannel {
             return false;
         }
 
-        ZkNodeCache zkNodeCache = zkClient.createZkNodeCache(commandPath, false);
+        final ZkNodeCache zkNodeCache = zkClient.createZkNodeCache(commandPath, false);
+        final CommandListener finalListener = listener;
         zkNodeCache.setUpdateListener(new Runnable() {
             @Override
             public void run() {
                 try {
-                    processUpdate(zkNodeCache, listener);
+                    processUpdate(zkNodeCache, finalListener);
                 } catch (Exception ex) {
                     logger.error("ChannelCommand exec command callback method exception!", ex);
                 }

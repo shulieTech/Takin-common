@@ -64,7 +64,7 @@ public class CuratorZkPathChildrenCache implements ZkPathChildrenCache {
         }
 
         List<ChildData> currentData = this.childCache.getCurrentData();
-        List<String> result = new ArrayList<>();
+        List<String> result = new ArrayList<String>();
         for (int i = 0; i < currentData.size(); i++) {
             String path = currentData.get(i).getPath();
             result.add(path);
@@ -148,13 +148,14 @@ public class CuratorZkPathChildrenCache implements ZkPathChildrenCache {
      */
     private void pathWatch(String path) throws Exception {
         childCache = new PathChildrenCache(client, path,false);
+        final String finalPath = path;
         childCache.getListenable().addListener(new PathChildrenCacheListener() {
             @Override
             public void childEvent(CuratorFramework client, PathChildrenCacheEvent event) throws Exception {
                 ChildData data = event.getData();
                 if (data != null){
                     String childPath = data.getPath();
-                    if (!childPath.equals(path)){
+                    if (!childPath.equals(finalPath)){
                         listener.call(client,event);
                     }
                 }
