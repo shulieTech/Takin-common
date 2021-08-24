@@ -115,7 +115,7 @@ public class SingleChannelHttpPushTest {
         command.setStatus(CommandStatus.COMMAND_SEND);
         CommandSend send = new CommandSend();
         send.setAgentId(AGENT_ID);
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<String, Object>();
 
         map.put("file", "filepath");
         send.setParam(map);

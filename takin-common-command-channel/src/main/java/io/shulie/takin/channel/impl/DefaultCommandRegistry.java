@@ -31,7 +31,7 @@ public class DefaultCommandRegistry implements CommandRegistry {
     private ConcurrentHashMap<String,CommandHandler> registry;
 
     public DefaultCommandRegistry() {
-        this.registry = new ConcurrentHashMap<>();
+        this.registry = new ConcurrentHashMap<String,CommandHandler>();
     }
 
     @Override
