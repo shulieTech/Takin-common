@@ -1,0 +1,12 @@
+io/shulie/takin/job/factory/SpringJobSchedulerFactory.class
+io/shulie/takin/job/annotation/ElasticSchedulerJob.class
+io/shulie/takin/job/ElasticRegCenterConfig.class
+io/shulie/takin/job/parser/JobConfParser.class
+io/shulie/takin/job/config/ElasticJobConfig.class
+io/shulie/takin/job/job/ClearLogJob.class
+io/shulie/takin/job/ElasticJobProperties.class
+io/shulie/takin/job/listener/TakinDistributeElasticJobListener.class
+io/shulie/takin/job/listener/TakinElasticJobListener.class
+io/shulie/takin/job/utils/ElasticJobUtils.class
+io/shulie/takin/job/ElasticJobProperties$JobConfig.class
+io/shulie/takin/job/config/zk/ZkClientConfig.class

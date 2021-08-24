@@ -1,0 +1,10 @@
+io/shulie/takin/common/beans/response/ResponseResult$ErrorInfo.class
+io/shulie/takin/common/beans/page/PagingList.class
+io/shulie/takin/common/beans/response/ResponseResult.class
+io/shulie/takin/common/beans/annotation/ActionTypeEnum.class
+io/shulie/takin/common/beans/page/PagingDevice.class
+io/shulie/takin/common/beans/annotation/AuthVerification.class
+io/shulie/takin/common/beans/component/CascaderVO.class
+io/shulie/takin/common/beans/page/PageBaseDTO.class
+io/shulie/takin/common/beans/component/SelectVO.class
+io/shulie/takin/common/beans/annotation/ModuleDef.class

@@ -1,0 +1,9 @@
+/Users/hezhongqi/workspace/takin-common/takin-common-parent/takin-common-exception-starter/src/main/java/io/shulie/takin/parent/exception/utils/ExceptionUtils.java
+/Users/hezhongqi/workspace/takin-common/takin-common-parent/takin-common-exception-starter/src/main/java/io/shulie/takin/parent/exception/advice/BaseExceptionAdvice.java
+/Users/hezhongqi/workspace/takin-common/takin-common-parent/takin-common-exception-starter/src/main/java/org/springframework/boot/autoconfigure/tro/BaseExceptionAutoConfiguration.java
+/Users/hezhongqi/workspace/takin-common/takin-common-parent/takin-common-exception-starter/src/main/java/io/shulie/takin/parent/exception/common/ExceptionConstant.java
+/Users/hezhongqi/workspace/takin-common/takin-common-parent/takin-common-exception-starter/src/main/java/io/shulie/takin/parent/exception/holder/ExceptionMessageHolder.java
+/Users/hezhongqi/workspace/takin-common/takin-common-parent/takin-common-exception-starter/src/main/java/org/springframework/boot/autoconfigure/tro/properties/BaseExceptionProperties.java
+/Users/hezhongqi/workspace/takin-common/takin-common-parent/takin-common-exception-starter/src/main/java/io/shulie/takin/parent/exception/entity/BaseException.java
+/Users/hezhongqi/workspace/takin-common/takin-common-parent/takin-common-exception-starter/src/main/java/io/shulie/takin/parent/exception/entity/ExceptionCode.java
+/Users/hezhongqi/workspace/takin-common/takin-common-parent/takin-common-exception-starter/src/main/java/io/shulie/takin/parent/exception/entity/ExceptionReadable.java

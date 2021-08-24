@@ -1,0 +1,42 @@
+{
+  "groups": [
+    {
+      "name": "takin.exception",
+      "type": "org.springframework.boot.autoconfigure.takin.properties.BaseExceptionProperties",
+      "sourceType": "org.springframework.boot.autoconfigure.takin.properties.BaseExceptionProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "takin.exception.debug-file-name",
+      "type": "java.lang.String",
+      "sourceType": "org.springframework.boot.autoconfigure.takin.properties.BaseExceptionProperties",
+      "defaultValue": "debug.properties"
+    },
+    {
+      "name": "takin.exception.http-status-file-name",
+      "type": "java.lang.String",
+      "sourceType": "org.springframework.boot.autoconfigure.takin.properties.BaseExceptionProperties",
+      "defaultValue": "http_status.properties"
+    },
+    {
+      "name": "takin.exception.message-file-name",
+      "type": "java.lang.String",
+      "sourceType": "org.springframework.boot.autoconfigure.takin.properties.BaseExceptionProperties",
+      "defaultValue": "message.properties"
+    },
+    {
+      "name": "takin.exception.message-files-path",
+      "type": "java.lang.String",
+      "sourceType": "org.springframework.boot.autoconfigure.takin.properties.BaseExceptionProperties",
+      "defaultValue": "exception"
+    },
+    {
+      "name": "takin.exception.solution-file-name",
+      "type": "java.lang.String",
+      "sourceType": "org.springframework.boot.autoconfigure.takin.properties.BaseExceptionProperties",
+      "defaultValue": "solution.properties"
+    }
+  ],
+  "hints": []
+}

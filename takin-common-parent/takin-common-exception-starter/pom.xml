@@ -20,10 +20,10 @@
     <parent>
         <artifactId>takin-common-parent</artifactId>
         <groupId>io.shulie.takin</groupId>
-        <version>common-1.7.0</version>
+        <version>common-1.7.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <version>common-1.7.0</version>
+    <version>common-1.7.1</version>
 
     <artifactId>takin-common-exception-starter</artifactId>
 

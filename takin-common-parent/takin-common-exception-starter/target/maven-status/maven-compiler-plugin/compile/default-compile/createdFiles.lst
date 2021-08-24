@@ -1,0 +1,12 @@
+org/springframework/boot/autoconfigure/takin/BaseExceptionAutoConfiguration.class
+META-INF/spring-configuration-metadata.json
+io/shulie/takin/parent/exception/holder/ExceptionMessageHolder$ExceptionEntity.class
+org/springframework/boot/autoconfigure/takin/properties/BaseExceptionProperties.class
+io/shulie/takin/parent/exception/holder/ExceptionMessageHolder$ExceptionPatternEntity.class
+io/shulie/takin/parent/exception/entity/ExceptionReadable.class
+io/shulie/takin/parent/exception/advice/BaseExceptionAdvice.class
+io/shulie/takin/parent/exception/entity/ExceptionCode.class
+io/shulie/takin/parent/exception/common/ExceptionConstant.class
+io/shulie/takin/parent/exception/entity/BaseException.class
+io/shulie/takin/parent/exception/utils/ExceptionUtils.class
+io/shulie/takin/parent/exception/holder/ExceptionMessageHolder.class
