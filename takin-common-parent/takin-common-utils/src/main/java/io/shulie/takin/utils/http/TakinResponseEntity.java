@@ -80,6 +80,7 @@ public class TakinResponseEntity<T> {
     public static <T> TakinResponseEntity<T> error(String s) {
         TakinResponseEntity<T> takinResponseEntity = new TakinResponseEntity<>();
         takinResponseEntity.setHttpStatus(BAD_CODE);
+        takinResponseEntity.setSuccess(false);
         takinResponseEntity.setErrorMsg(s);
         return takinResponseEntity;
     }
