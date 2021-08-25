@@ -27,3 +27,17 @@ hs_err_pid*
 
 /.idea/
 *.iml
+/target/
+/takin-common-parent/target/
+/takin-common-parent/takin-common-beans/target/
+/takin-common-parent/takin-common-definition/target/
+/takin-common-parent/takin-common-exception-starter/target/
+/takin-common-parent/takin-common-mybatis/target/
+/takin-common-job/target/
+/takin-common-bom/target/
+/takin-common-operation-log/target/
+/takin-common-command-channel/target/
+/takin-common-operation-log/takin-common-operation-log-api/target/
+/takin-common-sdk/target/
+/takin-common-parent/takin-common-utils/target/
+/takin-common-parent/takin-common-constants/target/

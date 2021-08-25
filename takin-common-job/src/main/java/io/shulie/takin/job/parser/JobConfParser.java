@@ -16,6 +16,8 @@
 package io.shulie.takin.job.parser;
 
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 import com.dangdang.ddframe.job.api.simple.SimpleJob;
 import com.dangdang.ddframe.job.lite.api.JobScheduler;
@@ -61,7 +63,10 @@ public class JobConfParser implements ApplicationContextAware {
                 throw new BeanCreationException(String.format("[JobConfParser] %s 初始化异常 请实现 %s", jobClass, SimpleJob.class));
             }
             ElasticSchedulerJob config = AnnotationUtils.findAnnotation(jobClass, ElasticSchedulerJob.class);
+
             ElasticJobProperties.JobConfig jobConfig = createJobConfig(config, className);
+
+
 
             // 构建SpringJobScheduler对象初始化
             SpringJobScheduler springJobScheduler = springJobSchedulerFactory.getSpringJobScheduler((SimpleJob) confBean, jobConfig);
@@ -82,8 +87,17 @@ public class JobConfParser implements ApplicationContextAware {
             log.info("[createJobConfig] default job name {}", jobName);
         }
 
+        // 分片配置处理
+        int shardingTotalCount = config.shardingTotalCount();
+        if(config.isSharding()) {
+            // 分片
+            shardingTotalCount = Optional.ofNullable(applicationContext.getEnvironment().getProperty("job.sharding.total.Count"))
+                .map(Integer::valueOf)
+                .orElse(config.shardingTotalCount());
+        }
+
         return new ElasticJobProperties.JobConfig(jobName, cron,
-            config.shardingTotalCount(), config.description(),
+            shardingTotalCount, config.description(),
             config.shardingItemParameters(),config.jobParameters(),
             config.misfire(),config.failover(),config.disabled(),
             config.isEvent());

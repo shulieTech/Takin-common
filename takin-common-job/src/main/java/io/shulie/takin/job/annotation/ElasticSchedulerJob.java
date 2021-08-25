@@ -22,6 +22,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.apache.xmlbeans.impl.xb.xsdschema.Facet;
+
 /**
 * @Package io.shulie.takin.job.annotation
 * @author 无涯
@@ -56,6 +58,12 @@ public @interface ElasticSchedulerJob {
      * @return
      */
     int shardingTotalCount() default 1;
+
+    /**
+     * 是否分片
+     * @return
+     */
+    boolean isSharding() default false;
 
     /**
      * 任务描述
