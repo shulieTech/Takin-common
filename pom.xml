@@ -18,7 +18,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.shulie.takin</groupId>
     <artifactId>takin-common</artifactId>
-    <version>common-1.7.1</version>
+    <version>common-1.7.2</version>
     <packaging>pom</packaging>
     <url>https://github.com/shulieTech/Takin-common.git</url>
     <description>公共组件，包含agent命令通道、分布式job模块、异常统一处理模块、sdk、工具类等多模块依赖包</description>
@@ -50,7 +50,7 @@
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ssa</maven.build.timestamp.format>
         <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
         <!-- biz version-->
-        <takin.common.version>common-1.7.1</takin.common.version>
+        <takin.common.version>common-1.7.2</takin.common.version>
         <!-- 3rd libs version -->
         <spring.boot.version>2.1.5.RELEASE</spring.boot.version>
         <curator.version>1.3.3</curator.version>
