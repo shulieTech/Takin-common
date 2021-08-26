@@ -45,3 +45,4 @@ hs_err_pid*
 /takin-common-sdk/target/
 /takin-common-parent/takin-common-utils/target/
 /takin-common-parent/takin-common-constants/target/
+/takin-common-parent/takin-common-mybatis/target/
