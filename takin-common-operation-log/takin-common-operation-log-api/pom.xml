@@ -20,10 +20,10 @@
     <parent>
         <artifactId>takin-common-operation-log</artifactId>
         <groupId>io.shulie.takin</groupId>
-        <version>common-1.7.2</version>
+        <version>common-1.7.3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <version>common-1.7.2</version>
+    <version>common-1.7.3</version>
     <artifactId>takin-common-operation-log-api</artifactId>
 
     <dependencies>
