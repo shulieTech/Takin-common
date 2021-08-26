@@ -1,9 +1,0 @@
-io.shulie.takin.job
-io.shulie.takin.job.annotation
-io.shulie.takin.job.config
-io.shulie.takin.job.config.zk
-io.shulie.takin.job.factory
-io.shulie.takin.job.job
-io.shulie.takin.job.listener
-io.shulie.takin.job.parser
-io.shulie.takin.job.utils

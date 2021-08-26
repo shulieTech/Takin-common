@@ -1,8 +1,8 @@
-/Users/hezhongqi/workspace/takin-common/takin-common-command-channel/src/test/java/io/shulie/takin/channel/LoggerTest.java
-/Users/hezhongqi/workspace/takin-common/takin-common-command-channel/src/test/java/io/shulie/takin/channel/SingleChannelTest.java
-/Users/hezhongqi/workspace/takin-common/takin-common-command-channel/src/test/java/io/shulie/takin/channel/ChannelTest.java
-/Users/hezhongqi/workspace/takin-common/takin-common-command-channel/src/test/java/io/shulie/takin/channel/SingleChannelHttpPushTest.java
-/Users/hezhongqi/workspace/takin-common/takin-common-command-channel/src/test/java/io/shulie/takin/channel/UploadFileHandler.java
-/Users/hezhongqi/workspace/takin-common/takin-common-command-channel/src/test/java/io/shulie/takin/channel/type/UploadFileCommandTest.java
-/Users/hezhongqi/workspace/takin-common/takin-common-command-channel/src/test/java/io/shulie/takin/channel/router/zk/DefaultServerChannelTest.java
-/Users/hezhongqi/workspace/takin-common/takin-common-command-channel/src/test/java/io/shulie/takin/channel/router/zk/DefaultClientChannelTest.java
+/Users/hezhongqi/aliyun_workspace/takin-common/takin-common-command-channel/src/test/java/io/shulie/takin/channel/router/zk/DefaultClientChannelTest.java
+/Users/hezhongqi/aliyun_workspace/takin-common/takin-common-command-channel/src/test/java/io/shulie/takin/channel/type/UploadFileCommandTest.java
+/Users/hezhongqi/aliyun_workspace/takin-common/takin-common-command-channel/src/test/java/io/shulie/takin/channel/UploadFileHandler.java
+/Users/hezhongqi/aliyun_workspace/takin-common/takin-common-command-channel/src/test/java/io/shulie/takin/channel/ChannelTest.java
+/Users/hezhongqi/aliyun_workspace/takin-common/takin-common-command-channel/src/test/java/io/shulie/takin/channel/SingleChannelHttpPushTest.java
+/Users/hezhongqi/aliyun_workspace/takin-common/takin-common-command-channel/src/test/java/io/shulie/takin/channel/LoggerTest.java
+/Users/hezhongqi/aliyun_workspace/takin-common/takin-common-command-channel/src/test/java/io/shulie/takin/channel/router/zk/DefaultServerChannelTest.java
+/Users/hezhongqi/aliyun_workspace/takin-common/takin-common-command-channel/src/test/java/io/shulie/takin/channel/SingleChannelTest.java
