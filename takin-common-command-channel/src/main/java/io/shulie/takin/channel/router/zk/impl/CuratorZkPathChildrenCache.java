@@ -146,16 +146,15 @@ public class CuratorZkPathChildrenCache implements ZkPathChildrenCache {
      * TreeCache: 可以将指定的路径节点作为根节点（祖先节点），对其所有的子节点操作进行监听，
      * 呈现树形目录的监听，可以设置监听深度，最大监听深度为 int 类型的最大值。
      */
-    private void pathWatch(String path) throws Exception {
+    private void pathWatch(final String path) throws Exception {
         childCache = new PathChildrenCache(client, path,false);
-        final String finalPath = path;
         childCache.getListenable().addListener(new PathChildrenCacheListener() {
             @Override
             public void childEvent(CuratorFramework client, PathChildrenCacheEvent event) throws Exception {
                 ChildData data = event.getData();
                 if (data != null){
                     String childPath = data.getPath();
-                    if (!childPath.equals(finalPath)){
+                    if (!childPath.equals(path)){
                         listener.call(client,event);
                     }
                 }

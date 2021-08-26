@@ -90,7 +90,7 @@ public class DefaultServerChannel implements ServerChannel {
     }
 
     @Override
-    public boolean send(CommandPacket command, CommandListener listener) throws Exception {
+    public boolean send(CommandPacket command, final CommandListener listener) throws Exception {
 
         validate(command, listener);
 
@@ -103,12 +103,11 @@ public class DefaultServerChannel implements ServerChannel {
         }
 
         final ZkNodeCache zkNodeCache = zkClient.createZkNodeCache(commandPath, false);
-        final CommandListener finalListener = listener;
         zkNodeCache.setUpdateListener(new Runnable() {
             @Override
             public void run() {
                 try {
-                    processUpdate(zkNodeCache, finalListener);
+                    processUpdate(zkNodeCache, listener);
                 } catch (Exception ex) {
                     logger.error("ChannelCommand exec command callback method exception!", ex);
                 }

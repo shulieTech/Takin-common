@@ -45,23 +45,21 @@ public class ZkPathHeartbeat {
 
     /**
      * 启动定时TTL 维护命令AgentId对应路径心跳时间
-     *
      * @param path 命令路径
      */
-    public void start(String path) {
-        final String finalPath = path;
+    public void start(final String path){
         executorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
                 HeartBeat beat = generateHeartBeat();
                 try {
                     byte[] serialize = serialize(beat);
-                    zkClient.updateData(finalPath, serialize);
+                    zkClient.updateData(path,serialize);
                 } catch (Exception e) {
-                    logger.error("CommandChannel heartbeat ttl exception", e);
+                    logger.error("CommandChannel heartbeat ttl exception",e);
                 }
             }
-        }, DEFAULT_TIME, DEFAULT_TIME, TimeUnit.MINUTES);
+        },DEFAULT_TIME,DEFAULT_TIME,TimeUnit.MINUTES);
     }
 
     public HeartBeat deserialize(byte[] beats) throws UnsupportedEncodingException {

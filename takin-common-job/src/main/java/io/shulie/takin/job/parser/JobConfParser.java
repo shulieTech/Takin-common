@@ -16,7 +16,6 @@
 package io.shulie.takin.job.parser;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 import com.dangdang.ddframe.job.api.simple.SimpleJob;
@@ -63,10 +62,7 @@ public class JobConfParser implements ApplicationContextAware {
                 throw new BeanCreationException(String.format("[JobConfParser] %s 初始化异常 请实现 %s", jobClass, SimpleJob.class));
             }
             ElasticSchedulerJob config = AnnotationUtils.findAnnotation(jobClass, ElasticSchedulerJob.class);
-
             ElasticJobProperties.JobConfig jobConfig = createJobConfig(config, className);
-
-
 
             // 构建SpringJobScheduler对象初始化
             SpringJobScheduler springJobScheduler = springJobSchedulerFactory.getSpringJobScheduler((SimpleJob) confBean, jobConfig);
