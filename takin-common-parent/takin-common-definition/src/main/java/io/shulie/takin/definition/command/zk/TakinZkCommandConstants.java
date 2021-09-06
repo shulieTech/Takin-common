@@ -21,9 +21,9 @@ package io.shulie.takin.definition.command.zk;
  * @author shiyajian
  * create: 2020-12-09
  */
-public final class takinZkCommandConstants {
+public final class TakinZkCommandConstants {
 
-    private takinZkCommandConstants() { /* no instance */ }
+    private TakinZkCommandConstants() { /* no instance */ }
 
     public static final String NAME_SPACE = "/takin/command";
 

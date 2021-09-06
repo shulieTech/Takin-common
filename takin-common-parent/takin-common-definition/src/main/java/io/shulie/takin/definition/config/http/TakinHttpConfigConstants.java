@@ -19,9 +19,9 @@ package io.shulie.takin.definition.config.http;
  * @author shiyajian
  * create: 2020-12-09
  */
-public final class takinHttpConfigConstants {
+public final class TakinHttpConfigConstants {
 
-    private takinHttpConfigConstants() { /* no instance */ }
+    private TakinHttpConfigConstants() { /* no instance */ }
 
     /**
      * 统一前缀
