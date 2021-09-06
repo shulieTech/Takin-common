@@ -20,9 +20,9 @@ package io.shulie.takin.definition.config.zk;
  * @author shiyajian
  * create: 2020-12-09
  */
-public final class takinZkConfigConstants {
+public final class TakinZkConfigConstants {
 
-    private takinZkConfigConstants() { /* no instance */ }
+    private TakinZkConfigConstants() { /* no instance */ }
 
     public static final String NAME_SPACE = "/takin/config";
 

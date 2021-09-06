@@ -22,31 +22,31 @@ import io.shulie.takin.definition.config.http.input.TraceUploadInput;
 import io.shulie.takin.definition.config.http.output.WhiteListStatusOutput;
 import io.shulie.takin.definition.config.http.input.ApplicationInsertInput;
 
-import static io.shulie.takin.definition.config.http.takinHttpConfigConstants.AGENT_VERSION_URL;
-import static io.shulie.takin.definition.config.http.takinHttpConfigConstants.APP_INSERT_URL;
-import static io.shulie.takin.definition.config.http.takinHttpConfigConstants.APP_PRESSURE_SWITCH_STATUS_URL;
-import static io.shulie.takin.definition.config.http.takinHttpConfigConstants.APP_WHITE_LIST_SWITCH_STATUS_URL;
-import static io.shulie.takin.definition.config.http.takinHttpConfigConstants.GUARD_URL;
-import static io.shulie.takin.definition.config.http.takinHttpConfigConstants.MIDDLE_STAUTS_URL;
-import static io.shulie.takin.definition.config.http.takinHttpConfigConstants.PERFORMANCE_BASE_URL;
-import static io.shulie.takin.definition.config.http.takinHttpConfigConstants.PERFORMANCE_TRACE_URL;
-import static io.shulie.takin.definition.config.http.takinHttpConfigConstants.PREFIX_URL;
-import static io.shulie.takin.definition.config.http.takinHttpConfigConstants.REGISTER_URL;
-import static io.shulie.takin.definition.config.http.takinHttpConfigConstants.ROCKETMQ_ISO_URL;
-import static io.shulie.takin.definition.config.http.takinHttpConfigConstants.SHADOW_DB_TABLE_URL;
-import static io.shulie.takin.definition.config.http.takinHttpConfigConstants.takin_REPORT_ERROR_SHADOW_JOB_URL;
-import static io.shulie.takin.definition.config.http.takinHttpConfigConstants.takin_SHADOW_JOB_URL;
-import static io.shulie.takin.definition.config.http.takinHttpConfigConstants.UPLOAD_ACCESS_STATUS_URL;
-import static io.shulie.takin.definition.config.http.takinHttpConfigConstants.UPLOAD_APP_INFO_URL;
-import static io.shulie.takin.definition.config.http.takinHttpConfigConstants.UPLOAD_URL;
-import static io.shulie.takin.definition.config.http.takinHttpConfigConstants.WHITELIST_FILE_URL;
-import static io.shulie.takin.definition.config.http.takinHttpConfigConstants.WHITELIST_URL;
+import static io.shulie.takin.definition.config.http.TakinHttpConfigConstants.AGENT_VERSION_URL;
+import static io.shulie.takin.definition.config.http.TakinHttpConfigConstants.APP_INSERT_URL;
+import static io.shulie.takin.definition.config.http.TakinHttpConfigConstants.APP_PRESSURE_SWITCH_STATUS_URL;
+import static io.shulie.takin.definition.config.http.TakinHttpConfigConstants.APP_WHITE_LIST_SWITCH_STATUS_URL;
+import static io.shulie.takin.definition.config.http.TakinHttpConfigConstants.GUARD_URL;
+import static io.shulie.takin.definition.config.http.TakinHttpConfigConstants.MIDDLE_STAUTS_URL;
+import static io.shulie.takin.definition.config.http.TakinHttpConfigConstants.PERFORMANCE_BASE_URL;
+import static io.shulie.takin.definition.config.http.TakinHttpConfigConstants.PERFORMANCE_TRACE_URL;
+import static io.shulie.takin.definition.config.http.TakinHttpConfigConstants.PREFIX_URL;
+import static io.shulie.takin.definition.config.http.TakinHttpConfigConstants.REGISTER_URL;
+import static io.shulie.takin.definition.config.http.TakinHttpConfigConstants.ROCKETMQ_ISO_URL;
+import static io.shulie.takin.definition.config.http.TakinHttpConfigConstants.SHADOW_DB_TABLE_URL;
+import static io.shulie.takin.definition.config.http.TakinHttpConfigConstants.takin_REPORT_ERROR_SHADOW_JOB_URL;
+import static io.shulie.takin.definition.config.http.TakinHttpConfigConstants.takin_SHADOW_JOB_URL;
+import static io.shulie.takin.definition.config.http.TakinHttpConfigConstants.UPLOAD_ACCESS_STATUS_URL;
+import static io.shulie.takin.definition.config.http.TakinHttpConfigConstants.UPLOAD_APP_INFO_URL;
+import static io.shulie.takin.definition.config.http.TakinHttpConfigConstants.UPLOAD_URL;
+import static io.shulie.takin.definition.config.http.TakinHttpConfigConstants.WHITELIST_FILE_URL;
+import static io.shulie.takin.definition.config.http.TakinHttpConfigConstants.WHITELIST_URL;
 
 /**
  * @author shiyajian
  * create: 2020-12-09
  */
-public enum takinHttpPullConfigUrlEnums {
+public enum TakinHttpPullConfigUrlEnums {
 
     /**
      * http 拉取白名单
@@ -103,7 +103,7 @@ public enum takinHttpPullConfigUrlEnums {
 
     private String url;
 
-    takinHttpPullConfigUrlEnums(PullMethod method, String url) {
+    TakinHttpPullConfigUrlEnums(PullMethod method, String url) {
         this.method = method;
         this.url = url;
     }

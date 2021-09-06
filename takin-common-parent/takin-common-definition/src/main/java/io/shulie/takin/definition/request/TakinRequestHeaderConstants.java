@@ -19,9 +19,9 @@ package io.shulie.takin.definition.request;
  * @author shiyajian
  * create: 2020-09-21
  */
-public final class takinRequestHeaderConstants {
+public final class TakinRequestHeaderConstants {
 
-    private takinRequestHeaderConstants() { /* no instance */ }
+    private TakinRequestHeaderConstants() { /* no instance */ }
 
     /**
      * 压测请求的 Header 头
