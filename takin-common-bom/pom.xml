@@ -51,32 +51,11 @@
     <properties>
         <takin.common.version>common-1.7.3</takin.common.version>
         <hutool.version>5.5.9</hutool.version>
-        <!--swagger-->
-        <spring.swagger.version>2.9.2</spring.swagger.version>
-        <swagger.ui.version>1.9.6</swagger.ui.version>
-        <swagger.version>1.5.22</swagger.version>
     </properties>
 
     <dependencyManagement>
 
         <dependencies>
-
-            <!--swagger-->
-            <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger2</artifactId>
-                <version>${spring.swagger.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.xiaoymin</groupId>
-                <artifactId>swagger-bootstrap-ui</artifactId>
-                <version>${swagger.ui.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.swagger</groupId>
-                <artifactId>swagger-annotations</artifactId>
-                <version>${swagger.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>io.shulie.takin</groupId>
