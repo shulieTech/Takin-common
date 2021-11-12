@@ -139,6 +139,8 @@ public class ResponseResult<T> implements Serializable {
          */
         private String solution;
 
+        public ErrorInfo(){};
+
         public ErrorInfo(String code, String msg, String solution) {
             this.code = code;
             this.msg = msg;

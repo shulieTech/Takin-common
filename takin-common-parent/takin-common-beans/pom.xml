@@ -20,11 +20,11 @@
     <parent>
         <artifactId>takin-common-parent</artifactId>
         <groupId>io.shulie.takin</groupId>
-        <version>common-1.7.4</version>
+        <version>common-1.7.5-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <version>common-1.7.4</version>
+    <version>common-1.7.5-SNAPSHOT</version>
     <artifactId>takin-common-beans</artifactId>
 
     <dependencies>
