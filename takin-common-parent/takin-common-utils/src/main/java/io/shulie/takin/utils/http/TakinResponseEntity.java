@@ -66,6 +66,8 @@ public class TakinResponseEntity<T> {
             takinResponseEntity.setErrorMsg(responseStr != null ? responseStr : errorMsg);
             return takinResponseEntity;
         }
+        // 判断下 返回值内容
+
         if (typeRef != null && responseStr != null) {
             takinResponseEntity.setBody(JsonHelper.string2Obj(responseStr, typeRef));
             return takinResponseEntity;

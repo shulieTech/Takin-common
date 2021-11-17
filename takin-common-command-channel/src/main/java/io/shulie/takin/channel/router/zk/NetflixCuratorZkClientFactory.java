@@ -17,12 +17,13 @@ package io.shulie.takin.channel.router.zk;
 
 import java.util.concurrent.ThreadFactory;
 
-import com.netflix.curator.framework.CuratorFramework;
-import com.netflix.curator.framework.CuratorFrameworkFactory;
-import com.netflix.curator.retry.ExponentialBackoffRetry;
+
 import io.shulie.takin.channel.exception.ChannelException;
 import io.shulie.takin.channel.router.zk.impl.NetflixCuratorZkClient;
 import io.shulie.takin.channel.utils.StringUtils;
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.ZooKeeper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

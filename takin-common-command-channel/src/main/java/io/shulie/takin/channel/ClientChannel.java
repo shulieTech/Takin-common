@@ -41,10 +41,11 @@ public interface ClientChannel {
 
     /**
      * 注册Agent 授权key
-     * @param userAppKey 注册节点Agent节点
+     * @param tenantAppKey 注册节点Agent节点
+     * @param envCode 注册节点Agent节点 环境
      * @return channel对象
      */
-    public ClientChannel registerUserAppKey(String userAppKey);
+    public ClientChannel registerTenantAndEnv(String tenantAppKey,String envCode);
 
     /**
      * 注册监听工具方法

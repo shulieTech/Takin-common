@@ -37,12 +37,12 @@ public abstract class HttpUtils {
     static Logger logger = LoggerFactory.getLogger(HttpUtils.class);
 
 
-    public static String doGet(String userAppKey,String url) {
+    public static String doGet(String tenantAppKey,String envCode,String url) {
         HostPort hostPort = getHostPortUrlFromUrl(url);
-        return doGet(userAppKey,hostPort.host, hostPort.port, hostPort.url);
+        return doGet(tenantAppKey,envCode,hostPort.host, hostPort.port, hostPort.url);
     }
 
-    public static String doGet(String userAppKey,String host, int port, String url) {
+    public static String doGet(String tenantAppKey,String envCode,String host, int port, String url) {
         InputStream input = null;
         OutputStream output = null;
         Socket socket = null;
@@ -51,7 +51,8 @@ public abstract class HttpUtils {
             String request = "GET " + url + " HTTP/1.1\r\n"
                     + "Host: " + host + ":" + port + "\r\n"
                     + "Connection: Keep-Alive\r\n"
-                    + (userAppKey == null ? "" : "UserAppKey: " + userAppKey + "\r\n")
+                    + (tenantAppKey == null ? "" : "tenantAppKey: " + tenantAppKey + "\r\n")
+                    + (envCode == null ? "" : "envCode: " + envCode + "\r\n")
                     + "\r\n";
             socket = new Socket();
             // 设置建立连接超时时间 1s
@@ -97,12 +98,12 @@ public abstract class HttpUtils {
         }
     }
 
-    public static String doPost(String userAppKey, String url, String body) {
+    public static String doPost(String tenantAppKey,String envCode, String url, String body) {
         HostPort hostPort = getHostPortUrlFromUrl(url);
-        return doPost(userAppKey,hostPort.host, hostPort.port, hostPort.url, body);
+        return doPost(tenantAppKey,envCode,hostPort.host, hostPort.port, hostPort.url, body);
     }
 
-    public static String doPost(String userAppKey, String host, int port, String url, String body) {
+    public static String doPost(String tenantAppKey,String envCode, String host, int port, String url, String body) {
         InputStream input = null;
         OutputStream output = null;
         Socket socket = null;
@@ -116,7 +117,8 @@ public abstract class HttpUtils {
             String request =
                     "POST " + url + " HTTP/1.1\r\nHost: " + host + ":" + port
                             + "\r\nConnection: Keep-Alive\r\n"
-                            + (userAppKey == null ? "" : "UserAppKey: " + userAppKey + "\r\n");
+                            + (tenantAppKey == null ? "" : "tenantAppKey: " + tenantAppKey + "\r\n")
+                            + (envCode == null ? "" : "envCode: " + envCode + "\r\n");
             if (body != null && !body.isEmpty()) {
                 request = request + "Content-Length: " + body.getBytes().length + "\r\n";
                 request = request + "Content-Type: application/json\r\n";

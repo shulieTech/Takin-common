@@ -17,9 +17,8 @@ package io.shulie.takin.channel.router.zk;
 
 import java.util.List;
 
-import com.netflix.curator.framework.recipes.locks.InterProcessMutex;
 import io.shulie.takin.channel.router.zk.bean.CreateMode;
-
+import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 
 /**
  * @Description ZooKeeper 客户端实现封装

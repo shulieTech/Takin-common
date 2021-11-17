@@ -15,10 +15,7 @@
 
 package io.shulie.takin.channel.router.zk;
 
-import com.netflix.curator.framework.CuratorFramework;
-import com.netflix.curator.framework.recipes.cache.ChildData;
-import com.netflix.curator.framework.recipes.cache.PathChildrenCacheEvent;
-import com.netflix.curator.framework.recipes.cache.PathChildrenCacheEvent.Type;
+
 import io.shulie.takin.channel.ClientChannel;
 import io.shulie.takin.channel.CommandRegistry;
 import io.shulie.takin.channel.bean.*;
@@ -28,6 +25,10 @@ import io.shulie.takin.channel.protocal.ChannelProtocol;
 import io.shulie.takin.channel.type.Command;
 import io.shulie.takin.channel.utils.HttpUtils;
 import io.shulie.takin.channel.utils.StringUtils;
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.recipes.cache.ChildData;
+import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
+import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +41,8 @@ import java.util.concurrent.ScheduledExecutorService;
  * @description: zk server
  */
 public class DefaultClientChannel implements ClientChannel {
-    private String userAppKey;
+    private String tenantAppKey;
+    private String envCode;
     private ZkClientConfig config;
     private ChannelProtocol protocol;
     private CommandRegistry registry;
@@ -75,8 +77,9 @@ public class DefaultClientChannel implements ClientChannel {
     }
 
     @Override
-    public DefaultClientChannel registerUserAppKey(String userAppKey) {
-        this.userAppKey = userAppKey;
+    public DefaultClientChannel registerTenantAndEnv(String tenantAppKey,String envCode) {
+        this.tenantAppKey = tenantAppKey;
+        this.envCode = envCode;
         return this;
     }
 
@@ -216,7 +219,7 @@ public class DefaultClientChannel implements ClientChannel {
         }
         CommandPacket packet = deepCopyPacket(commandPacket, response);
         String json = this.protocol.serializeJson(packet);
-        String result = HttpUtils.doPost(this.userAppKey, pushUrl, json);
+        String result = HttpUtils.doPost(this.tenantAppKey,this.envCode, pushUrl, json);
         if (StringUtils.isBlank(result)) {
             return false;
         } else {

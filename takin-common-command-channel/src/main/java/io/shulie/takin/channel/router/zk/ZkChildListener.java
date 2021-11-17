@@ -15,8 +15,8 @@
 
 package io.shulie.takin.channel.router.zk;
 
-import com.netflix.curator.framework.CuratorFramework;
-import com.netflix.curator.framework.recipes.cache.PathChildrenCacheEvent;
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 
 /**
  * @author: Hengyu
