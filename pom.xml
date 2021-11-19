@@ -50,7 +50,7 @@
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ssa</maven.build.timestamp.format>
         <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
         <!-- biz version-->
-        <takin.common.version>common-1.7.4</takin.common.version>
+        <takin.common.version>common-2.0.0-SNAPSHOT</takin.common.version>
         <!-- 3rd libs version -->
         <spring.boot.version>2.1.5.RELEASE</spring.boot.version>
         <curator.version>2.10.0</curator.version>

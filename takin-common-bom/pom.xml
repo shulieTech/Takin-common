@@ -49,7 +49,7 @@
     </scm>
 
     <properties>
-        <takin.common.version>common-1.7.4</takin.common.version>
+        <takin.common.version>common-2.0.0-SNAPSHOT</takin.common.version>
         <hutool.version>5.5.9</hutool.version>
     </properties>
 
