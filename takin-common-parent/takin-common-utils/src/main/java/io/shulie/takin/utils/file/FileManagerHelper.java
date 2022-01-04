@@ -31,9 +31,10 @@ import java.util.zip.CheckedOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import io.shulie.takin.utils.linux.LinuxHelper;
+import cn.hutool.core.io.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 文件操作工具类
@@ -65,7 +66,7 @@ public final class FileManagerHelper {
      * @return
      */
     public static void copyFiles(List<String> sourcePaths, String targetPath) throws IOException {
-        File targetFileDir = new File(targetPath);
+        File targetFileDir = FileUtil.file(targetPath);
         //目标文件夹不存在时，创建改文件夹
         if (!targetFileDir.exists()) {
             targetFileDir.mkdirs();
@@ -79,9 +80,9 @@ public final class FileManagerHelper {
                 targetFilePath = targetPath + sourcePath;
             }
             //当目标文件不存在时，复制文件
-            File targetFile = new File(targetFilePath);
+            File targetFile = FileUtil.file(targetFilePath);
             if (!targetFile.exists()) {
-                Files.copy(new File(sourcePath).toPath(), targetFile.toPath());
+                Files.copy(FileUtil.file(sourcePath).toPath(), targetFile.toPath());
             }
         }
     }
@@ -108,10 +109,42 @@ public final class FileManagerHelper {
      * @return
      */
     public static Boolean deleteFilesByPath(String path) {
-        if (!new File(path).exists()) {
+        //不能删除根目录
+        if (StringUtils.isBlank(path) || "/".equals(path)){
+            return Boolean.FALSE;
+        }
+        File file = FileUtil.file(path);
+        return deleteFileAndChildren(file);
+    }
+
+    public static Boolean deleteFileAndChildren(File file){
+        if (!file.exists()) {
             return Boolean.TRUE;
         }
-        return LinuxHelper.executeLinuxCmd("rm -rf " + path);
+        if (file.isFile()){
+            return file.delete();
+        }
+
+        boolean flag = true;
+        File[] files = file.listFiles();
+        if (files != null && files.length > 0){
+            // 删除文件夹中的所有文件包括子目录
+            for (File childFile : files) {
+                flag = deleteFileAndChildren(childFile);
+            }
+        }
+        // 删除目录成功
+        if (flag) {
+            // 删除当前目录
+            if (file.delete()) {
+                log.warn("删除目录[{}]成功！", file.getName());
+            } else {
+                return Boolean.FALSE;
+            }
+            return Boolean.TRUE;
+        }
+        log.warn("删除目录失败！");
+        return Boolean.FALSE;
     }
 
     public static String readTextFileContent(File file) {
@@ -143,7 +176,7 @@ public final class FileManagerHelper {
      */
     public static Boolean createFileByPathAndString(String filePath,String fileContent){
         String substring = filePath.substring(0, filePath.lastIndexOf("/"));
-        File file = new File(substring);
+        File file = FileUtil.file(substring);
         if (!file.exists()){
             file.mkdirs();
         }
@@ -163,7 +196,7 @@ public final class FileManagerHelper {
                     bf.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("字符串转换为文件,文件流关闭失败！",e);
             }
         }
     }
@@ -194,11 +227,11 @@ public final class FileManagerHelper {
      */
     public static void zipFiles(List<String> sourcePaths, String targetPath, String zipFileName, boolean isCovered,String tmpFilePath)
         throws IOException {
-        File zipFilePath = new File(targetPath);
+        File zipFilePath = FileUtil.file(targetPath);
         if (!zipFilePath.exists()) {
             zipFilePath.mkdirs();
         }
-        File zipFile = new File(targetPath + zipFileName);
+        File zipFile = FileUtil.file(targetPath + zipFileName);
         if (zipFile.exists()) {
             //如果文件已存在
             if (!isCovered) {
@@ -212,7 +245,7 @@ public final class FileManagerHelper {
         //FIXME 替换成 File.createTempFile 这种方式
         UUID uuid = UUID.randomUUID();
         String tmpPath = tmpFilePath+ File.separator + uuid;
-        File tmpPathFile = new File(tmpPath);
+        File tmpPathFile = FileUtil.file(tmpPath);
         if (!tmpPathFile.exists()) {
             tmpPathFile.mkdirs();
         }
@@ -222,7 +255,7 @@ public final class FileManagerHelper {
     }
 
     private static void compress(String srcPathName, File zipFile) throws IOException {
-        File file = new File(srcPathName);
+        File file = FileUtil.file(srcPathName);
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(zipFile);
             CheckedOutputStream cos = new CheckedOutputStream(fileOutputStream,
