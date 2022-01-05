@@ -16,6 +16,7 @@
 package io.shulie.takin.utils.string;
 
 import cn.hutool.core.util.StrUtil;
+import org.springframework.web.util.JavaScriptUtils;
 
 /**
  * @author shiyajian
@@ -23,4 +24,25 @@ import cn.hutool.core.util.StrUtil;
  */
 public class StringUtil extends StrUtil {
 
+    /**
+     * 转义特殊字符
+     *
+     * @param content 内容
+     * @return 转义之后的内容
+     */
+    public static String converterString(String content) {
+        return JavaScriptUtils.javaScriptEscape(content);
+    }
+
+    /**
+     * 使用format，然后转义特殊字符
+     *
+     * @param format 规则
+     * @param args   规则对应参数
+     * @return 转义之后的内容
+     */
+    public static String format(String format, Object... args) {
+        String str = String.format(format, args);
+        return JavaScriptUtils.javaScriptEscape(str);
+    }
 }
