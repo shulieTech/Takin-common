@@ -42,6 +42,9 @@ public abstract class HttpUtils {
         return doGet(userAppKey,hostPort.host, hostPort.port, hostPort.url);
     }
 
+    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(
+            value = {"UNENCRYPTED_SOCKET"},
+            justification = "目前先使用http的方式请求，暂且不改为HTTPS")
     public static String doGet(String userAppKey,String host, int port, String url) {
         InputStream input = null;
         OutputStream output = null;
@@ -102,6 +105,9 @@ public abstract class HttpUtils {
         return doPost(userAppKey,hostPort.host, hostPort.port, hostPort.url, body);
     }
 
+    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(
+            value = {"UNENCRYPTED_SOCKET"},
+            justification = "目前先使用http的方式请求，暂且不改为HTTPS")
     public static String doPost(String userAppKey, String host, int port, String url, String body) {
         InputStream input = null;
         OutputStream output = null;

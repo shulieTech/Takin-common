@@ -61,6 +61,9 @@ public class LinuxHelper {
     }
 
 
+    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(
+            value = {"COMMAND_INJECTION"},
+            justification = "忽略命令执行报警，在一些地方目前必须使用到")
     public static Boolean executeLinuxCmd(String cmd) {
         BufferedReader read = null;
         try {
@@ -88,6 +91,9 @@ public class LinuxHelper {
      * @param shellPath shell脚本路径
      * @return
      */
+    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(
+            value = {"COMMAND_INJECTION"},
+            justification = "忽略命令执行报警，在一些地方目前必须使用到")
     public static boolean runChmod(String shellPath) throws Exception {
         // 添加shell的执行权限
         String chmod = "chmod +x " + shellPath;
@@ -120,6 +126,9 @@ public class LinuxHelper {
         return run(timeout,callback,response,commands);
     }
 
+    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(
+            value = {"COMMAND_INJECTION"},
+            justification = "忽略命令执行报警，在一些地方目前必须使用到")
     private static int run(Long timeout, final Callback callback, final Response response,String commands) {
         int status = -1;
         Process process = null;
