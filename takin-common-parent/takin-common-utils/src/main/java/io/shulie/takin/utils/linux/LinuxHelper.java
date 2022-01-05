@@ -36,6 +36,9 @@ public class LinuxHelper {
      * @param cmds
      * @return
      */
+    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(
+            value = {"COMMAND_INJECTION"},
+            justification = "忽略命令执行报警，在一些地方目前必须使用到")
     public static String execCurl(String[] cmds) {
         ProcessBuilder process = new ProcessBuilder(cmds);
 
@@ -99,7 +102,6 @@ public class LinuxHelper {
             }
             BufferedReader in = new BufferedReader(new InputStreamReader(
                     process.getInputStream()));
-            log.info(in.readLine());
         } catch (IOException e) {
             throw e;
         } catch (InterruptedException e) {

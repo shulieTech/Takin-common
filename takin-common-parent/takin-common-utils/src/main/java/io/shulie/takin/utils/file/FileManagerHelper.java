@@ -32,8 +32,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileNameUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -175,14 +177,14 @@ public final class FileManagerHelper {
      * 将字符串创建为指定文件
      */
     public static Boolean createFileByPathAndString(String filePath,String fileContent){
-        String substring = filePath.substring(0, filePath.lastIndexOf("/"));
-        File file = FileUtil.file(substring);
+        String fullPath = FilenameUtils.getFullPath(filePath);
+        File file = FileUtil.file(fullPath);
         if (!file.exists()){
             file.mkdirs();
         }
         BufferedWriter bf = null;
         try {
-            bf = new BufferedWriter(new FileWriter(filePath));
+            bf = new BufferedWriter(new FileWriter(FileUtil.file(filePath)));
             bf.write(fileContent);
             bf.flush();
             bf.close();
