@@ -41,12 +41,12 @@ public class ClearLogJob implements SimpleJob {
     private JdbcTemplate jdbcTemplate;
     @Override
     public void execute(ShardingContext shardingContext) {
-        String clearTime = environment.getProperty("job.clear.day.time");
-        if(StringUtils.isBlank(clearTime)) {
-            clearTime = "3";
-        }
-        log.info("清理JOB_EXECUTION_LOG、JOB_STATUS_TRACE_LOG");
-        jdbcTemplate.update("delete from JOB_EXECUTION_LOG where datediff(curdate(), START_TIME) >= " + clearTime );
-        jdbcTemplate.update("delete from JOB_STATUS_TRACE_LOG where datediff(curdate(), CREATION_TIME) >= " + clearTime);
+        // String clearTime = environment.getProperty("job.clear.day.time");
+        // if(StringUtils.isBlank(clearTime)) {
+        //     clearTime = "3";
+        // }
+        // log.info("清理JOB_EXECUTION_LOG、JOB_STATUS_TRACE_LOG");
+        // jdbcTemplate.update("delete from JOB_EXECUTION_LOG where datediff(curdate(), START_TIME) >= " + clearTime );
+        // jdbcTemplate.update("delete from JOB_STATUS_TRACE_LOG where datediff(curdate(), CREATION_TIME) >= " + clearTime);
     }
 }
