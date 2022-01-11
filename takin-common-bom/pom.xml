@@ -103,6 +103,12 @@
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>io.shulie.takin</groupId>
+                <artifactId>takin-common-agent</artifactId>
+                <version>${takin.common.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
