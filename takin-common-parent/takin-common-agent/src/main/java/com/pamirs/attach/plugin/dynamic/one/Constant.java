@@ -12,15 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pamirs.attach.plugin.dynamic.template;
+package com.pamirs.attach.plugin.dynamic.one;
 
 /**
  * @Auther: vernon
- * @Date: 2021/8/19 15:02
+ * @Date: 2021/8/18 22:54
  * @Description:
  */
-public class ConnectionPoolTemplate extends AbstractTemplate {
-
-
-
+public interface Constant {
+    String MODULE_NAME = "dynamic-resource-common";
 }

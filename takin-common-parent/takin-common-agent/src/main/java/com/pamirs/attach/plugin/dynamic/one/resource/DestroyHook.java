@@ -12,13 +12,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pamirs.attach.plugin.dynamic;
+package com.pamirs.attach.plugin.dynamic.one.resource;
 
 /**
- * @Auther: vernon
- * @Date: 2021/8/18 22:54
- * @Description:
+ * 销毁的钩子
+ *
+ * @author vernon
+ * @since
  */
-public interface Constant {
-    String MODULE_NAME = "dynamic-resource-common";
+public interface DestroyHook<K, RES> {
+    /**
+     * 销毁资源
+     *
+     * @param resource 资源
+     */
+    void destroy(K key, RES resource);
 }

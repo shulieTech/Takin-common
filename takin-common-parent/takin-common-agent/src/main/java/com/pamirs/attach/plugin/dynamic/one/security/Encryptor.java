@@ -12,19 +12,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pamirs.attach.plugin.dynamic.resource;
+package com.pamirs.attach.plugin.dynamic.one.security;
+
 
 /**
- * 销毁的钩子
- *
- * @author vernon
- * @since
+ * @Auther: vernon
+ * @Date: 2021/8/23 03:56
+ * @Description:
  */
-public interface DestroyHook<K, RES> {
+public interface Encryptor {
     /**
-     * 销毁资源
+     * 加密
      *
-     * @param resource 资源
+     * @param code
+     * @return
      */
-    void destroy(K key, RES resource);
+    String encode(String code) throws Exception;
+
+    /**
+     * 解密
+     *
+     * @param code
+     * @return
+     */
+    String decode(String code) throws Exception;
 }

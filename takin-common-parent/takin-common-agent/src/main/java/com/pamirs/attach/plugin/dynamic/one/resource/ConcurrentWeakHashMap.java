@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pamirs.attach.plugin.dynamic.resource;
+package com.pamirs.attach.plugin.dynamic.one.resource;
 
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;

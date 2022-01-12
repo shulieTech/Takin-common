@@ -12,28 +12,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pamirs.attach.plugin.dynamic.security;
-
+package com.pamirs.attach.plugin.dynamic.one.template;
 
 /**
  * @Auther: vernon
- * @Date: 2021/8/23 03:56
+ * @Date: 2021/8/19 15:02
  * @Description:
  */
-public interface Encryptor {
-    /**
-     * 加密
-     *
-     * @param code
-     * @return
-     */
-    String encode(String code) throws Exception;
+public class ConnectionPoolTemplate extends AbstractTemplate {
 
-    /**
-     * 解密
-     *
-     * @param code
-     * @return
-     */
-    String decode(String code) throws Exception;
+
+
 }

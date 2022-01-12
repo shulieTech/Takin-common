@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pamirs.attach.plugin.dynamic;
+package com.pamirs.attach.plugin.dynamic.one;
 
 
-import com.pamirs.attach.plugin.dynamic.reflect.Reflect;
+import com.pamirs.attach.plugin.dynamic.one.reflect.Reflect;
 
 import java.lang.reflect.Method;
 import java.util.Map;

@@ -12,16 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pamirs.attach.plugin.dynamic;
+package com.pamirs.attach.plugin.dynamic.one;
 
-import com.pamirs.attach.plugin.dynamic.template.C3p0Template;
-import com.pamirs.attach.plugin.dynamic.template.DbcpTemplate;
-import com.pamirs.attach.plugin.dynamic.template.DruidTemplate;
-import com.pamirs.attach.plugin.dynamic.template.HbaseTemplate;
-import com.pamirs.attach.plugin.dynamic.template.HikariTemplate;
-import com.pamirs.attach.plugin.dynamic.template.HttpTemplate;
-import com.pamirs.attach.plugin.dynamic.template.ProxoolTemplate;
-import com.pamirs.attach.plugin.dynamic.template.RedisTemplate;
+import com.pamirs.attach.plugin.dynamic.one.template.C3p0Template;
+import com.pamirs.attach.plugin.dynamic.one.template.DbcpTemplate;
+import com.pamirs.attach.plugin.dynamic.one.template.DruidTemplate;
+import com.pamirs.attach.plugin.dynamic.one.template.HbaseTemplate;
+import com.pamirs.attach.plugin.dynamic.one.template.HikariTemplate;
+import com.pamirs.attach.plugin.dynamic.one.template.HttpTemplate;
+import com.pamirs.attach.plugin.dynamic.one.template.ProxoolTemplate;
+import com.pamirs.attach.plugin.dynamic.one.template.RedisTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
