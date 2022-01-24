@@ -38,7 +38,7 @@ import static org.hamcrest.CoreMatchers.is;
 
 public class SingleChannelTest {
 
-    public static final String ZK_SERVERS = "192.168.1.204:2181,192.168.1.204:2181,192.168.1.204:2181";
+    public static final String ZK_SERVERS = "192.168.1.154:2181,192.168.1.154:2181,192.168.1.154:2181";
     public static final String AGENT_ID = "192.168.100.110-76117";
     public static final Logger logger = LoggerFactory.getLogger(SingleChannelTest.class);
 
