@@ -30,6 +30,7 @@ import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 import org.apache.curator.framework.state.ConnectionState;
 import org.apache.curator.framework.state.ConnectionStateListener;
+import org.apache.zookeeper.CreateMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,7 +91,15 @@ public class CuratorZkPathChildrenCache implements ZkPathChildrenCache {
     public void start() throws Exception {
         checkState(running.compareAndSet(false, true), "Node cache has been started");
         client.getConnectionStateListenable().addListener(connectionStateListener);
+        // 增加一个永久节点
+        client.create()      //
+            //级联创建。如果父节点不存在，则将父节点、父父节点一块创建
+            .creatingParentsIfNeeded()
+            //节点类型
+            .withMode(CreateMode.PERSISTENT)
+            .forPath(this.path + "/temp", "".getBytes());
         reset();
+
     }
 
     @Override

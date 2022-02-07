@@ -24,23 +24,44 @@ import com.alibaba.fastjson.JSON;
 import io.shulie.takin.channel.bean.CommandPacket;
 import io.shulie.takin.channel.bean.CommandSend;
 import io.shulie.takin.channel.bean.CommandStatus;
+import io.shulie.takin.channel.bean.Constants;
 import io.shulie.takin.channel.protocal.JsonChannelProtocol;
 import io.shulie.takin.channel.router.zk.DefaultClientChannel;
 import io.shulie.takin.channel.router.zk.DefaultServerChannel;
 import io.shulie.takin.channel.router.zk.ZkClientConfig;
 import io.shulie.takin.channel.type.UploadFileCommand;
 import org.junit.Assert;
+import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.is;
 
 public class ChannelTest {
 
-    public static final String ZK_SERVERS = "192.168.1.101:2181,192.168.1.102:2181,192.168.1.103:2181";
+    public static final String ZK_SERVERS = "192.168.1.154:2181,192.168.1.154:2181,192.168.1.154:2181";
     public static final String AGENT_ID = "192.168.100.109-76117";
     public static AtomicInteger count = new AtomicInteger(0);
 
+    @Test
+    public void test1() {
+        String commandPath =  "/config/log/pradar/commands/172.17.0.1-15970/d3c82e81-1742-454b-990d-621e9e4344c8";
+        // 提取agentId
+        String command = Constants.COMMAND_PATH_PREFIX +"/";
+        commandPath = commandPath.replace(command,"");
+        String[] temp = commandPath.split("/");
+        String agentId = temp[0];
+        commandPath  = getCommandPath(agentId);
+        System.out.println(commandPath);
+    }
 
+    private String getCommandPath(String agentId) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(Constants.COMMAND_PATH_PREFIX);
+        builder.append("/" + agentId);
+        return builder.toString();
+    }
+
+    @Test
     public void test() {
         try {
             Thread clientThread = new Thread(new Runnable() {
@@ -93,7 +114,7 @@ public class ChannelTest {
         channel.register(AGENT_ID);
 
         Thread.sleep(100000L);
-        channel.close();
+        //channel.close();
     }
 
     public void serverStart() throws Exception {
@@ -119,7 +140,7 @@ public class ChannelTest {
         command.setSend(send);
 
         int i = 1;
-        while (i <= 100) {
+        while (i <= 2) {
 
             map.put("file", "filepath");
             map.put("index", i);
