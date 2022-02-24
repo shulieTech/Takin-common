@@ -14,6 +14,7 @@ public class SecurityTest {
 
     public static void main(String[] args) throws Exception {
         String str = "hello...";
+        String str2 = TextStr.str;
         long startTime = System.currentTimeMillis();
         String md1 = MD5Utils.getInstance().getMD5(str);
         long endTime = System.currentTimeMillis();
@@ -34,7 +35,7 @@ public class SecurityTest {
         endTime = System.currentTimeMillis();
         System.out.println("耗时:"+(endTime-startTime));
 
-        System.out.println("====================RSA");
+        System.out.println("====================RSA1");
 
         startTime = System.currentTimeMillis();
         String miwen1 = RSAUtils.getInstance().encrypt(str);
@@ -44,9 +45,18 @@ public class SecurityTest {
         endTime = System.currentTimeMillis();
         System.out.println("耗时1:"+(endTime-startTime));
 
+        System.out.println("====================RSA2");
+
+        startTime = System.currentTimeMillis();
+        String miwen12 = RSAUtils.getInstance().encrypt(str);
+        System.out.println("密文1:"+miwen12);
+        String minwen12 = RSAUtils.getInstance().decrypt(miwen1);
+        System.out.println("明文1:"+minwen12);
+        endTime = System.currentTimeMillis();
+        System.out.println("耗时1:"+(endTime-startTime));
+
         System.out.println("====================AES");
 
-        String str2 = TextStr.str;
         startTime = System.currentTimeMillis();
         String miwen2 = AESUtil.getInstance().encrypt(str2);
         System.out.println("密文2:"+miwen2);
