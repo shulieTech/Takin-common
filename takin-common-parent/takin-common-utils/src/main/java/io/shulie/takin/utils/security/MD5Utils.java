@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class MD5Utils {
 
@@ -40,11 +41,16 @@ public class MD5Utils {
      * 3.摘要字节数组中的"每个二进制值"字节形式,"转成十六进制形式",然后再把这些值给拼接起来,就是MD5值了
      * (PS:为了便于阅读,把多余的fff去掉,并且单个字符前加个0)
      */
-    public String getMD5(String str) throws Exception {
+    public String getMD5(String str){
         str += SALT;
         String MD5 = "";
 
-        MessageDigest md5 = MessageDigest.getInstance("MD5");
+        MessageDigest md5 = null;
+        try {
+            md5 = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
         byte[] bytes = str.getBytes();
         byte[] digest = md5.digest(bytes);
 
@@ -75,25 +81,29 @@ public class MD5Utils {
      * 2.不停的读取流中的"内容"放入字符串,放一部分就"更新"一部分.直到全部完毕
      * 3.然后调用md5.digest();就会得到有内容的字节数组,剩下的就和上边一样了.
      */
-    public String getMD5(File file) throws Exception {
+    public String getMD5(File file){
         String MD5 = "";
+        MessageDigest md5 = null;
+        try {
+            md5 = MessageDigest.getInstance("MD5");
+            FileInputStream fis = new FileInputStream(file);
 
-        MessageDigest md5 = MessageDigest.getInstance("MD5");
-        FileInputStream fis = new FileInputStream(file);
+            byte[] bytes = new byte[1024 * 5];
 
-        byte[] bytes = new byte[1024 * 5];
+            int len = -1;
+            while ((len = fis.read(bytes)) != -1) {
+                //一部分一部分更新
+                md5.update(bytes, 0, len);
+            }
+            byte[] digest = md5.digest();
+            for (int i = 0; i < digest.length; i++) {
+                int n = digest[i] & 0x000000ff;
+                String s = Integer.toHexString(n);
 
-        int len = -1;
-        while ((len = fis.read(bytes)) != -1) {
-            //一部分一部分更新
-            md5.update(bytes, 0, len);
-        }
-        byte[] digest = md5.digest();
-        for (int i = 0; i < digest.length; i++) {
-            int n = digest[i] & 0x000000ff;
-            String s = Integer.toHexString(n);
-
-            MD5 += s;
+                MD5 += s;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return MD5;
     }
