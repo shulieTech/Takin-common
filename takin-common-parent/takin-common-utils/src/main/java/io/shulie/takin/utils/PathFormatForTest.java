@@ -21,8 +21,10 @@ public class PathFormatForTest {
             isLocEnv = false;
         }
         if(isLocEnv) {
-            if (!path.replace("//", "/").startsWith("/Users/"+System.getProperty("user.name")+"/")) {
-                path = "/Users/"+System.getProperty("user.name")+"/" + path.replace("/nfs_dir", "");
+            if (!path.replace("//", "/").startsWith("/Users/"+System.getProperty("user.name"))) {
+                path = "/Users/"+System.getProperty("user.name") +(!path.contains("data")?"/data":"") + path.replace("/nfs_dir", "");
+            }else{
+                path = path.replace("/nfs_dir", "");
             }
         }
         return path;
