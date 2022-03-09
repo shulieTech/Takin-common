@@ -115,18 +115,18 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    <distributionManagement>
-        <repository>
-            <id>${releases.id}</id>
-            <name>${releases.name}</name>
-            <url>${releases.url}</url>
-        </repository>
-        <snapshotRepository>
-            <id>${snapshots.id}</id>
-            <name>${snapshots.name}</name>
-            <url>${snapshots.url}</url>
-        </snapshotRepository>
-    </distributionManagement>
+<!--    <distributionManagement>-->
+<!--        <repository>-->
+<!--            <id>${releases.id}</id>-->
+<!--            <name>${releases.name}</name>-->
+<!--            <url>${releases.url}</url>-->
+<!--        </repository>-->
+<!--        <snapshotRepository>-->
+<!--            <id>${snapshots.id}</id>-->
+<!--            <name>${snapshots.name}</name>-->
+<!--            <url>${snapshots.url}</url>-->
+<!--        </snapshotRepository>-->
+<!--    </distributionManagement>-->
 
     <profiles>
         <!-- 默认 -->
