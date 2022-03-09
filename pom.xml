@@ -115,18 +115,16 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-<!--    <distributionManagement>-->
-<!--        <repository>-->
-<!--            <id>${releases.id}</id>-->
-<!--            <name>${releases.name}</name>-->
-<!--            <url>${releases.url}</url>-->
-<!--        </repository>-->
-<!--        <snapshotRepository>-->
-<!--            <id>${snapshots.id}</id>-->
-<!--            <name>${snapshots.name}</name>-->
-<!--            <url>${snapshots.url}</url>-->
-<!--        </snapshotRepository>-->
-<!--    </distributionManagement>-->
+    <distributionManagement>
+        <repository>
+            <id>rdc-releases</id>
+            <url>https://packages.aliyun.com/maven/repository/2101190-release-xxuvBf/</url>
+        </repository>
+        <snapshotRepository>
+            <id>rdc-snapshots</id>
+            <url>https://packages.aliyun.com/maven/repository/2101190-snapshot-EQD7pQ/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <profiles>
         <!-- 默认 -->
