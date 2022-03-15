@@ -108,10 +108,10 @@ public class BaseExceptionAdvice {
         if(e.getMessage().contains("数据签名异常,请联系管理员")){
             ExceptionEntity  exceptionEntity = new ExceptionEntity();
             exceptionEntity.setCode("19800-T0103");
-            exceptionEntity.setDebug("19800-T0103-数据异常,数据异常,请联系管理员");
+            exceptionEntity.setDebug("19800-T0103-数据异常,请联系管理员");
             exceptionEntity.setSolution(ExceptionMessageHolder.DEFAULT_EXCEPTION_SOLUTION_INFO);
             exceptionEntity.setDebug("19800-T0103-数据异常,请联系管理员");
-            exceptionEntity.setMessage("19800-T0103-数据异常,数据异常,请联系管理员");
+            exceptionEntity.setMessage("19800-T0103-数据异常,请联系管理员");
             exceptionEntity.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
             return exceptionResolve(e, exceptionEntity);
         }
