@@ -105,6 +105,16 @@ public class BaseExceptionAdvice {
 
     @ExceptionHandler(Throwable.class)
     public ResponseResult<Void> exceptionHandler(Throwable e) {
+        if(e.getMessage().contains("数据签名异常,请联系管理员")){
+            ExceptionEntity  exceptionEntity = new ExceptionEntity();
+            exceptionEntity.setCode("19800-T0103");
+            exceptionEntity.setDebug("数据异常");
+            exceptionEntity.setSolution(ExceptionMessageHolder.DEFAULT_EXCEPTION_SOLUTION_INFO);
+            exceptionEntity.setDebug("数据异常");
+            exceptionEntity.setMessage("数据异常");
+            exceptionEntity.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+            return exceptionResolve(e, exceptionEntity);
+        }
         ExceptionEntity  exceptionEntity = exceptionMessageHolder.defaultException();
         exceptionEntity.setMessage(ExceptionUtils.getPublicMessage(e));
         return exceptionResolve(e, exceptionEntity);
