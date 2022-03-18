@@ -64,6 +64,15 @@ public enum ActionTypeEnum {
         return null;
     }
 
+    public static ActionTypeEnum getActionTypeEnumByCode(Integer code) {
+        for (ActionTypeEnum actionTypeEnum : ActionTypeEnum.values()) {
+            if (actionTypeEnum.getCode().equals(code)) {
+                return actionTypeEnum;
+            }
+        }
+        return null;
+    }
+
     public Integer getCode() {
         return code;
     }
