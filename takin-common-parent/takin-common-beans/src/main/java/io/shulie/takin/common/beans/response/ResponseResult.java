@@ -22,6 +22,8 @@ package io.shulie.takin.common.beans.response;
 * @date 2021/6/28 10:23 上午
 */
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import lombok.Data;
 
@@ -31,6 +33,8 @@ public class ResponseResult<T> implements Serializable {
     public static final boolean DEFAULT_SUCCESS = true;
 
     private static final long serialVersionUID = 1L;
+
+    private Map<String,Object> extData = new HashMap<>();
 
     /**
      * 错误信息实体
