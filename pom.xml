@@ -18,7 +18,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.shulie.takin</groupId>
     <artifactId>takin-common</artifactId>
-     <version>common-2.0.2-SNAPSHOT</version>
+     <version>common-2.0.2-SNAPSHOT-yidongyun</version>
     <packaging>pom</packaging>
     <url>https://github.com/shulieTech/Takin-common.git</url>
     <description>公共组件，包含agent命令通道、分布式job模块、异常统一处理模块、sdk、工具类等多模块依赖包</description>
