@@ -27,7 +27,14 @@ public enum ActionTypeEnum {
     DELETE(4, "删除"),
     START_STOP(5, "启动停止"),
     ENABLE_DISABLE(6, "启用禁用"),
-    DOWNLOAD(7, "下载");
+    DOWNLOAD(7, "下载"),
+
+    REPORT(8,"报告"),
+    PIGEONHOLE(9,"归档"),
+    SHARE(10,"共享")
+
+    ;
+
 
     private Integer code;
     private String cname;
