@@ -26,7 +26,11 @@
     <modelVersion>4.0.0</modelVersion>
      <version>common-2.0.2-SNAPSHOT</version>
     <artifactId>takin-common-sdk</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>takin-kafka-sdk</module>
+    </modules>
 
     <dependencies>
         <dependency>
