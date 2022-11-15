@@ -7,7 +7,6 @@ import cn.hutool.crypto.digest.MD5;
 import com.pamirs.pradar.log.parser.DataType;
 import io.shulie.takin.sdk.kafka.MessageSendCallBack;
 import io.shulie.takin.sdk.kafka.MessageSendService;
-import io.shulie.takin.utils.json.JsonHelper;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -48,8 +47,6 @@ public class KafkaSendServiceImpl implements MessageSendService {
         this.initUrlTopicMap(null);
         this.initDataTypeTopicMap(null);
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, serverConfig);
-        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
         producer = new KafkaProducer<>(props);
     }
 
@@ -144,6 +141,8 @@ public class KafkaSendServiceImpl implements MessageSendService {
         urlTopicMap.put("/agent/push/application/middleware", "stress-test-agent-push-application-middleware");
         //引擎metrics数据上报
         urlTopicMap.put("/notify/job/pressure/metrics/upload", "stress-test-pressure-metrics-upload");
+        //agent版本上报
+        urlTopicMap.put("/api/confcenter/applicationmnt/update/applicationAgent", "stress-test-confcenter-applicationmnt-update-applicationagent");
     }
 
     /**

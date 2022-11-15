@@ -1,14 +1,12 @@
 package io.shulie.takin.sdk.kafka.impl;
 
-import cn.chinaunicom.client.UdpThriftSerializer;
+import cn.chinaunicom.client.ThriftDeserializer;
 import cn.chinaunicom.pinpoint.thrift.dto.TStressTestAgentData;
 import io.shulie.takin.sdk.kafka.MessageReceiveCallBack;
 import io.shulie.takin.sdk.kafka.MessageReceiveService;
-import io.shulie.takin.utils.json.JsonHelper;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +21,7 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageReceiveServiceImpl.class.getName());
 
     private KafkaConsumer<String, byte[]> kafkaConsumer;
-    private UdpThriftSerializer serializer;
+    private ThriftDeserializer deserializer;
 
     @Override
     public void init(Properties props, String serverConfig, String groupId) {
@@ -34,16 +32,15 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
             props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 100);
         }
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, serverConfig);
-        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
         if (groupId != null) {
             props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         }
+
         kafkaConsumer = new KafkaConsumer<>(props);
         try {
-            serializer = new UdpThriftSerializer();
+            deserializer = new ThriftDeserializer();
         } catch (TTransportException e) {
-            LOGGER.error("初始化序列化工具失败", e);
+            LOGGER.error("初始化反序列化工具失败", e);
         }
     }
 
@@ -65,7 +62,7 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
                             callBack.fail("接收到消息为空");
                             return;
                         }
-                        TStressTestAgentData tStressTestAgentData = new TStressTestAgentData();
+                        TStressTestAgentData tStressTestAgentData = deserializer.deserialize(bytes);
                         callBack.success(tStressTestAgentData);
                     } catch (Exception e) {
                         callBack.fail(e.getMessage());

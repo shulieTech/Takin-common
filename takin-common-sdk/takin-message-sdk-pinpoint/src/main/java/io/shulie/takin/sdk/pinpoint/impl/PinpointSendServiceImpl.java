@@ -1,4 +1,4 @@
-package io.shulie.takin.sdk.kafka.impl;
+package io.shulie.takin.sdk.pinpoint.impl;
 
 import cn.chinaunicom.client.UdpThriftSerializer;
 import cn.chinaunicom.client.UdpTransport;
@@ -147,5 +147,7 @@ public class PinpointSendServiceImpl implements MessageSendService {
         urlDataTypeMap.put("/api/agent/push/application/config", DataType.AGENT_PUSH_APPLICATION_CONFIG);
         //中间件信息上报
         urlDataTypeMap.put("/agent/push/application/middleware", DataType.AGENT_PUSH_APPLICATION_MIDDLEWARE);
+        //agent版本更新
+        urlDataTypeMap.put("/api/confcenter/applicationmnt/update/applicationAgent", DataType.CONFCENTER_APPLICATIONMNT_UPDATE_APPLICATIONAGENT);
     }
 }

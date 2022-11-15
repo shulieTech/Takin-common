@@ -1,8 +1,5 @@
 package io.shulie.takin.sdk.kafka;
 
-import sun.nio.ch.ThreadPool;
-
-import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;

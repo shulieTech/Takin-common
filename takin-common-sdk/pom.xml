@@ -29,7 +29,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>takin-kafka-sdk</module>
+        <module>takin-message-sdk</module>
+        <module>takin-message-sdk-kafka</module>
+        <module>takin-message-sdk-pinpoint</module>
     </modules>
 
     <dependencies>
