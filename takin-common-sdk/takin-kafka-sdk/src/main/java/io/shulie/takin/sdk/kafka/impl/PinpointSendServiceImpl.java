@@ -4,6 +4,7 @@ import cn.chinaunicom.client.UdpThriftSerializer;
 import cn.chinaunicom.client.UdpTransport;
 import cn.chinaunicom.pinpoint.thrift.dto.TStressTestAgentData;
 import cn.hutool.core.collection.CollectionUtil;
+import com.pamirs.pradar.log.parser.DataType;
 import io.shulie.takin.sdk.kafka.MessageSendCallBack;
 import io.shulie.takin.sdk.kafka.MessageSendService;
 import org.apache.thrift.transport.TTransportException;
@@ -18,19 +19,22 @@ import java.util.Properties;
 
 /**
  * 发送消息到Pinpoint，再转到kafka
+ *
  * @author zhaoyong
  */
 public class PinpointSendServiceImpl implements MessageSendService {
     private static final Logger LOGGER = LoggerFactory.getLogger(PinpointSendServiceImpl.class.getName());
     private UdpTransport udpTransport;
     private InetSocketAddress socketAddress;
-    // 可复用的Thrift对象
-    private TStressTestAgentData logData = new TStressTestAgentData();
     private UdpThriftSerializer serializer;
-    private Map<String, String> urlTopicMap;
+    private Map<String, Byte> urlDataTypeMap;
 
     @Override
     public void init(Properties props, String serverConfig, InetSocketAddress socketAddress) {
+        if (socketAddress == null){
+            LOGGER.error("初始化KafkaSendServiceImpl socketAddress");
+            return;
+        }
         this.socketAddress = socketAddress;
         try {
             serializer = new UdpThriftSerializer();
@@ -38,7 +42,7 @@ public class PinpointSendServiceImpl implements MessageSendService {
             LOGGER.error("初始化序列化工具失败", e);
         }
         this.createUdpTransport();
-        this.initUrlTopicMap(null);
+        this.initUrlDataTypeMap(null);
     }
 
     @Override
@@ -48,26 +52,32 @@ public class PinpointSendServiceImpl implements MessageSendService {
 
     @Override
     public void send(String url, Map<String, String> headers, String body, String key, MessageSendCallBack messageSendCallBack) {
-        String topic = urlTopicMap.get(url);
-        if (topic == null) {
-            messageSendCallBack.fail("没有通过url获取到对应的topic");
+        if (url == null){
+            messageSendCallBack.fail("url不能为空");
             return;
         }
+        Byte dataType = urlDataTypeMap.get(url);
+        if (dataType == null) {
+            messageSendCallBack.fail("没有通过url获取到对应的dataType");
+            return;
+        }
+        TStressTestAgentData logData = new TStressTestAgentData();
         logData.setStringValue(body);
-        if (CollectionUtil.isNotEmpty(headers)){
-            if (headers.containsKey("userAppKey")){
+        logData.setDataType(dataType);
+        if (CollectionUtil.isNotEmpty(headers)) {
+            if (headers.containsKey("userAppKey")) {
                 logData.setUserAppKey(headers.get("userAppKey"));
             }
-            if (headers.containsKey("tenantAppKey")){
+            if (headers.containsKey("tenantAppKey")) {
                 logData.setTenantAppKey(headers.get("tenantAppKey"));
             }
-            if (headers.containsKey("userId")){
+            if (headers.containsKey("userId")) {
                 logData.setUserId(headers.get("userId"));
             }
-            if (headers.containsKey("envCode")){
+            if (headers.containsKey("envCode")) {
                 logData.setEnvCode(headers.get("envCode"));
             }
-            if (headers.containsKey("agentExpand")){
+            if (headers.containsKey("agentExpand")) {
                 logData.setAgentExpand(headers.get("agentExpand"));
             }
         }
@@ -84,6 +94,10 @@ public class PinpointSendServiceImpl implements MessageSendService {
     @Override
     public void send(byte dataType, int version, String content, String ip, MessageSendCallBack messageSendCallBack) {
         try {
+            if (content == null) {
+                messageSendCallBack.fail("发送内容不能为空");
+            }
+            TStressTestAgentData logData = new TStressTestAgentData();
             logData.setStringValue(content);
             logData.setDataType(dataType);
             logData.setHostIp(ip);
@@ -113,25 +127,25 @@ public class PinpointSendServiceImpl implements MessageSendService {
      *
      * @param topicMap
      */
-    public void initUrlTopicMap(Map<String, String> topicMap) {
+    public void initUrlDataTypeMap(Map<String, Byte> topicMap) {
         if (topicMap == null) {
-            urlTopicMap = new HashMap<>();
+            urlDataTypeMap = new HashMap<>();
         } else {
-            urlTopicMap = topicMap;
+            urlDataTypeMap = topicMap;
         }
         //性能分析数据
-        urlTopicMap.put("/api/agent/performance/basedata", "stress-test-agent-performance-basedata");
+        urlDataTypeMap.put("/api/agent/performance/basedata", DataType.AGENT_PERFORMANCE_BASEDATA);
         //应用上报
-        urlTopicMap.put("/api/confcenter/interface/add/interfaceData", "stress-test-confcenter-interface-add-interfaceData");
+        urlDataTypeMap.put("/api/confcenter/interface/add/interfaceData", DataType.CENFCENTER_INTERFACE_ADD_INTEFACEDATA);
         //入口规则
-        urlTopicMap.put("/api/agent/api/register", "stress-test-agent-api-register");
+        urlDataTypeMap.put("/api/agent/api/register", DataType.AGENT_API_REGISTER);
         //定时上报接入状态
-        urlTopicMap.put("/api/application/agent/access/status", "stress-test-application-agent-access-status");
+        urlDataTypeMap.put("/api/application/agent/access/status", DataType.APPLICATION_AGENT_ACCESS_STATUS);
         //上报影子job信息
-        urlTopicMap.put("/api/shadow/job/update", "stress-test-shadow-job-update");
+        urlDataTypeMap.put("/api/shadow/job/update", DataType.SHADOW_JOB_UPDATE);
         //配置信息上报
-        urlTopicMap.put("/api/agent/push/application/config", "stress-test-agent-push-application-config");
+        urlDataTypeMap.put("/api/agent/push/application/config", DataType.AGENT_PUSH_APPLICATION_CONFIG);
         //中间件信息上报
-        urlTopicMap.put("/agent/push/application/middleware", "stress-test-agent-push-application-middleware");
+        urlDataTypeMap.put("/agent/push/application/middleware", DataType.AGENT_PUSH_APPLICATION_MIDDLEWARE);
     }
 }

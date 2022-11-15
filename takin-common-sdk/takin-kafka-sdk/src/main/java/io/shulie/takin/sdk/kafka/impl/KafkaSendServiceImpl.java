@@ -1,5 +1,6 @@
 package io.shulie.takin.sdk.kafka.impl;
 
+import cn.chinaunicom.client.UdpThriftSerializer;
 import cn.chinaunicom.pinpoint.thrift.dto.TStressTestAgentData;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.crypto.digest.MD5;
@@ -10,6 +11,9 @@ import io.shulie.takin.utils.json.JsonHelper;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.thrift.transport.TTransportException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.util.HashMap;
@@ -18,17 +22,34 @@ import java.util.Properties;
 
 public class KafkaSendServiceImpl implements MessageSendService {
 
-    private KafkaProducer<String, String> producer;
+    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSendServiceImpl.class.getName());
+    private KafkaProducer<String, byte[]> producer;
 
     private Map<String, String> urlTopicMap;
 
     private Map<Byte, String> dataTypeTopicMap;
 
+    private UdpThriftSerializer serializer;
+
     @Override
     public void init(Properties props, String serverConfig, InetSocketAddress socketAddress) {
+        if (props == null){
+            props = new Properties();
+        }
+        if (serverConfig == null){
+            LOGGER.error("初始化KafkaSendServiceImpl serverConfig不能为空");
+            return;
+        }
+        try {
+            serializer = new UdpThriftSerializer();
+        } catch (TTransportException e) {
+            LOGGER.error("初始化序列化工具失败", e);
+        }
         this.initUrlTopicMap(null);
         this.initDataTypeTopicMap(null);
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, serverConfig);
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
         producer = new KafkaProducer<>(props);
     }
 
@@ -87,7 +108,8 @@ public class KafkaSendServiceImpl implements MessageSendService {
 
     private void sendMessage(MessageSendCallBack messageSendCallBack, String topic, String key, TStressTestAgentData logData) {
         try {
-            ProducerRecord<String, String> producerRecord = new ProducerRecord<String, String>(topic, key, JsonHelper.bean2Json(logData));
+            byte[] serialize = serializer.serialize(logData);
+            ProducerRecord<String, byte[]> producerRecord = new ProducerRecord<String, byte[]>(topic, key, serialize);
             producer.send(producerRecord);
             messageSendCallBack.success();
         } catch (Exception e) {
