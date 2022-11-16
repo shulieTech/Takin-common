@@ -5,8 +5,11 @@ import cn.chinaunicom.client.UdpTransport;
 import cn.chinaunicom.pinpoint.thrift.dto.TStressTestAgentData;
 import cn.hutool.core.collection.CollectionUtil;
 import com.pamirs.pradar.log.parser.DataType;
+import io.shulie.takin.sdk.kafka.HttpSender;
 import io.shulie.takin.sdk.kafka.MessageSendCallBack;
 import io.shulie.takin.sdk.kafka.MessageSendService;
+import io.shulie.takin.sdk.kafka.util.MessageSwitchUtil;
+import io.shulie.takin.sdk.kafka.util.PropertiesReader;
 import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +18,6 @@ import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * 发送消息到Pinpoint，再转到kafka
@@ -30,16 +32,34 @@ public class PinpointSendServiceImpl implements MessageSendService {
     private Map<String, Byte> urlDataTypeMap;
 
     @Override
-    public void init(Properties props, String serverConfig, InetSocketAddress socketAddress) {
-        if (socketAddress == null){
+    public void init() {
+        boolean userKafkaSwitch = MessageSwitchUtil.userKafkaSwitch();
+        if (!userKafkaSwitch) {
+            LOGGER.warn("pinpoint推送开关已关闭，不进行初始化");
+            return;
+        }
+        try {
+            String property = System.getProperty("pradar.data.pusher.pinpoint.collector.address");
+            if (property == null) {
+                PropertiesReader propertiesReader = new PropertiesReader("kafka-sdk.properties");
+                property = propertiesReader.getProperty("pradar.data.pusher.pinpoint.collector.address", "192.168.1.112:9092");
+            }
+            LOGGER.info("获取到推送地址为:{}", property);
+            String[] node = property.split(":");
+            socketAddress = new InetSocketAddress(node[0], Integer.parseInt(node[1]));
+        } catch (Exception e) {
+            LOGGER.error("解析推送地址失败", e);
+        }
+
+        if (socketAddress == null) {
             LOGGER.error("初始化KafkaSendServiceImpl socketAddress");
             return;
         }
-        this.socketAddress = socketAddress;
         try {
             serializer = new UdpThriftSerializer();
         } catch (TTransportException e) {
             LOGGER.error("初始化序列化工具失败", e);
+            return;
         }
         this.createUdpTransport();
         this.initUrlDataTypeMap(null);
@@ -51,8 +71,8 @@ public class PinpointSendServiceImpl implements MessageSendService {
     }
 
     @Override
-    public void send(String url, Map<String, String> headers, String body, String key, MessageSendCallBack messageSendCallBack) {
-        if (url == null){
+    public void send(String url, Map<String, String> headers, String body, MessageSendCallBack messageSendCallBack, HttpSender httpSender) {
+        if (url == null) {
             messageSendCallBack.fail("url不能为空");
             return;
         }

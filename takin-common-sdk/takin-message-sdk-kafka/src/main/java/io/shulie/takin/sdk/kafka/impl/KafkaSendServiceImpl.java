@@ -5,8 +5,11 @@ import cn.chinaunicom.pinpoint.thrift.dto.TStressTestAgentData;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.crypto.digest.MD5;
 import com.pamirs.pradar.log.parser.DataType;
+import io.shulie.takin.sdk.kafka.HttpSender;
 import io.shulie.takin.sdk.kafka.MessageSendCallBack;
 import io.shulie.takin.sdk.kafka.MessageSendService;
+import io.shulie.takin.sdk.kafka.util.MessageSwitchUtil;
+import io.shulie.takin.sdk.kafka.util.PropertiesReader;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -14,7 +17,6 @@ import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -31,19 +33,36 @@ public class KafkaSendServiceImpl implements MessageSendService {
     private UdpThriftSerializer serializer;
 
     @Override
-    public void init(Properties props, String serverConfig, InetSocketAddress socketAddress) {
-        if (props == null){
-            props = new Properties();
-        }
-        if (serverConfig == null){
-            LOGGER.error("初始化KafkaSendServiceImpl serverConfig不能为空");
+    public void init() {
+        boolean kafkaSwitch = MessageSwitchUtil.userKafkaSwitch();
+        if (!kafkaSwitch) {
+            LOGGER.warn("kafka开关处理关闭状态，不进行发送初始化");
             return;
         }
+        String serverConfig = null;
+        try {
+            PropertiesReader propertiesReader = new PropertiesReader("kafka-sdk.properties");
+            serverConfig = propertiesReader.getProperty("kafka.sdk.bootstrap");
+        } catch (Exception e) {
+            LOGGER.error("读取配置文件失败", e);
+        }
+
+        String kafkaSdkBootstrap = System.getProperty("kafka.sdk.bootstrap");
+        if (kafkaSdkBootstrap != null) {
+            serverConfig = kafkaSdkBootstrap;
+        }
+        if (serverConfig == null) {
+            LOGGER.info("kafka配置serverConfig未找到，不进行kafka发送初始化");
+            return;
+        }
+        LOGGER.info("kafka发送获取到的推送地址为:{}", serverConfig);
         try {
             serializer = new UdpThriftSerializer();
         } catch (TTransportException e) {
             LOGGER.error("初始化序列化工具失败", e);
+            return;
         }
+        Properties props = new Properties();
         this.initUrlTopicMap(null);
         this.initDataTypeTopicMap(null);
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, serverConfig);
@@ -56,35 +75,33 @@ public class KafkaSendServiceImpl implements MessageSendService {
     }
 
     @Override
-    public void send(String url, Map<String, String> headers, String body, String key, MessageSendCallBack messageSendCallBack) {
+    public void send(String url, Map<String, String> headers, String body, MessageSendCallBack messageSendCallBack, HttpSender httpSender) {
         String topic = urlTopicMap.get(url);
         if (topic == null) {
             messageSendCallBack.fail("没有通过url获取到对应的topic");
             return;
         }
-        if (key == null) {
-            key = MD5.create().digestHex(body);
-        }
+        String key = MD5.create().digestHex(body);
         TStressTestAgentData logData = new TStressTestAgentData();
         logData.setStringValue(body);
-        if (CollectionUtil.isNotEmpty(headers)){
-            if (headers.containsKey("userAppKey")){
+        if (CollectionUtil.isNotEmpty(headers)) {
+            if (headers.containsKey("userAppKey")) {
                 logData.setUserAppKey(headers.get("userAppKey"));
             }
-            if (headers.containsKey("tenantAppKey")){
+            if (headers.containsKey("tenantAppKey")) {
                 logData.setTenantAppKey(headers.get("tenantAppKey"));
             }
-            if (headers.containsKey("userId")){
+            if (headers.containsKey("userId")) {
                 logData.setUserId(headers.get("userId"));
             }
-            if (headers.containsKey("envCode")){
+            if (headers.containsKey("envCode")) {
                 logData.setEnvCode(headers.get("envCode"));
             }
-            if (headers.containsKey("agentExpand")){
+            if (headers.containsKey("agentExpand")) {
                 logData.setAgentExpand(headers.get("agentExpand"));
             }
         }
-        this.sendMessage(messageSendCallBack, topic, key, logData);
+        this.sendMessage(topic, key, logData, messageSendCallBack);
     }
 
     @Override
@@ -100,10 +117,10 @@ public class KafkaSendServiceImpl implements MessageSendService {
         logData.setDataType(dataType);
         logData.setHostIp(ip);
         logData.setVersion(version + "");
-        this.sendMessage(messageSendCallBack, topic, key, logData);
+        this.sendMessage(topic, key, logData, messageSendCallBack);
     }
 
-    private void sendMessage(MessageSendCallBack messageSendCallBack, String topic, String key, TStressTestAgentData logData) {
+    private void sendMessage(String topic, String key, TStressTestAgentData logData, MessageSendCallBack messageSendCallBack) {
         try {
             byte[] serialize = serializer.serialize(logData);
             ProducerRecord<String, byte[]> producerRecord = new ProducerRecord<String, byte[]>(topic, key, serialize);

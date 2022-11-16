@@ -1,12 +1,10 @@
 package io.shulie.takin.sdk.kafka;
 
-import cn.chinaunicom.pinpoint.thrift.dto.TStressTestAgentData;
-
-import java.util.Map;
+import io.shulie.takin.sdk.kafka.entity.MessageEntity;
 
 public interface MessageReceiveCallBack {
 
-    void success(TStressTestAgentData tStressTestAgentData);
+    void success(MessageEntity messageEntity);
 
     void fail(String errorMessage);
 }
