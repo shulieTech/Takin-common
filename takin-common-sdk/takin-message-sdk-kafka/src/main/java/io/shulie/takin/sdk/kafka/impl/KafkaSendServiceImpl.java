@@ -160,6 +160,23 @@ public class KafkaSendServiceImpl implements MessageSendService {
         dataTypeTopicMap.put(DataType.MONITOR_LOG, "stress-test-agent-monitor");
         dataTypeTopicMap.put(DataType.AGENT_LOG, "stress-test-agent-log");
         dataTypeTopicMap.put(DataType.PRESSURE_ENGINE_TRACE_LOG, "stress-test-pressure-engine-trace-log");
+
+        //性能分析数据
+        dataTypeTopicMap.put(DataType.AGENT_PERFORMANCE_BASEDATA, "stress-test-agent-performance-basedata");
+        //应用上报
+        dataTypeTopicMap.put(DataType.CENFCENTER_INTERFACE_ADD_INTEFACEDATA, "stress-test-confcenter-interface-add-interfaceData");
+        //入口规则
+        dataTypeTopicMap.put(DataType.AGENT_API_REGISTER, "stress-test-agent-api-register");
+        //定时上报接入状态
+        dataTypeTopicMap.put(DataType.APPLICATION_AGENT_ACCESS_STATUS, "stress-test-application-agent-access-status");
+        //上报影子job信息
+        dataTypeTopicMap.put(DataType.SHADOW_JOB_UPDATE, "stress-test-shadow-job-update");
+        //配置信息上报
+        dataTypeTopicMap.put(DataType.AGENT_PUSH_APPLICATION_CONFIG, "stress-test-agent-push-application-config");
+        //中间件信息上报
+        dataTypeTopicMap.put(DataType.AGENT_PUSH_APPLICATION_MIDDLEWARE, "stress-test-agent-push-application-middleware");
+        //agent版本更新
+        dataTypeTopicMap.put(DataType.CONFCENTER_APPLICATIONMNT_UPDATE_APPLICATIONAGENT, "stress-test-confcenter-applicationmnt-update-applicationagent");
     }
 
 }
