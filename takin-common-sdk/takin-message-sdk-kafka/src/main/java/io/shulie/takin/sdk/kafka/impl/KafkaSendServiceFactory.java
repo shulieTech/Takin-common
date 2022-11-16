@@ -1,5 +1,6 @@
 package io.shulie.takin.sdk.kafka.impl;
 
+import io.shulie.takin.sdk.kafka.MessageReceiveService;
 import io.shulie.takin.sdk.kafka.MessageSendService;
 
 public class KafkaSendServiceFactory {
@@ -10,4 +11,9 @@ public class KafkaSendServiceFactory {
         return kafkaSendService;
     }
 
+    public MessageReceiveService getKafkaMessageReceiveInstance(){
+        MessageReceiveServiceImpl messageReceiveService = new MessageReceiveServiceImpl();
+        messageReceiveService.init();
+        return messageReceiveService;
+    }
 }

@@ -72,6 +72,10 @@ public class PinpointSendServiceImpl implements MessageSendService {
 
     @Override
     public void send(String url, Map<String, String> headers, String body, MessageSendCallBack messageSendCallBack, HttpSender httpSender) {
+        if (socketAddress == null || udpTransport == null) {
+            httpSender.sendMessage();
+            return;
+        }
         if (url == null) {
             messageSendCallBack.fail("url不能为空");
             return;

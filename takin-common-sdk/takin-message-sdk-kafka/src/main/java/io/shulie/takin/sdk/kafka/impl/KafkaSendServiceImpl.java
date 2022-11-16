@@ -76,6 +76,10 @@ public class KafkaSendServiceImpl implements MessageSendService {
 
     @Override
     public void send(String url, Map<String, String> headers, String body, MessageSendCallBack messageSendCallBack, HttpSender httpSender) {
+        if (producer == null) {
+            httpSender.sendMessage();
+            return;
+        }
         String topic = urlTopicMap.get(url);
         if (topic == null) {
             messageSendCallBack.fail("没有通过url获取到对应的topic");
@@ -157,7 +161,7 @@ public class KafkaSendServiceImpl implements MessageSendService {
         //中间件信息上报
         urlTopicMap.put("/agent/push/application/middleware", "stress-test-agent-push-application-middleware");
         //引擎metrics数据上报
-        urlTopicMap.put("/notify/job/pressure/metrics/upload", "stress-test-pressure-metrics-upload");
+        urlTopicMap.put("/notify/job/pressure/metrics/upload_old", "stress-test-pressure-metrics-upload-old");
         //agent版本上报
         urlTopicMap.put("/api/confcenter/applicationmnt/update/applicationAgent", "stress-test-confcenter-applicationmnt-update-applicationagent");
     }

@@ -81,6 +81,9 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
 
     @Override
     public void receive(List<String> topics, MessageReceiveCallBack callBack) {
+        if (kafkaConsumer == null){
+            return;
+        }
         kafkaConsumer.subscribe(topics);
         while (true) {
             ConsumerRecords<String, byte[]> consumerRecords = kafkaConsumer.poll(Duration.ofMillis(300));
