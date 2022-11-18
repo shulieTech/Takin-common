@@ -173,5 +173,12 @@ public class PinpointSendServiceImpl implements MessageSendService {
         urlDataTypeMap.put("/agent/push/application/middleware", DataType.AGENT_PUSH_APPLICATION_MIDDLEWARE);
         //agent版本更新
         urlDataTypeMap.put("/api/confcenter/applicationmnt/update/applicationAgent", DataType.CONFCENTER_APPLICATIONMNT_UPDATE_APPLICATIONAGENT);
+        //agent节点状态，zk路径
+        urlDataTypeMap.put("/config/log/pradar/status", DataType.CONFIG_LOG_PARDAR_STATUS);
+        urlDataTypeMap.put("/config/log/pradar/client", DataType.CONFIG_LOG_PARDAR_CLIENT);
+        //新增应用
+        urlDataTypeMap.put("/api/application/center/app/info", DataType.APPLICATION_CENTER_APP_INFO);
+
+
     }
 }

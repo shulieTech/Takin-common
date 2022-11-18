@@ -164,8 +164,15 @@ public class KafkaSendServiceImpl implements MessageSendService {
         urlTopicMap.put("/notify/job/pressure/metrics/upload_old", "stress-test-pressure-metrics-upload-old");
         //agent版本上报
         urlTopicMap.put("/api/confcenter/applicationmnt/update/applicationAgent", "stress-test-confcenter-applicationmnt-update-applicationagent");
-        //agentManage上报校验结果
-        urlTopicMap.put("/api/pressureResource/agent", "stress-test-pressureResource-agent");
+        //探针响应
+        urlTopicMap.put("/open/agent/event/ack", "stress-test-open-agent-event-ack");
+        //探针心跳
+        urlTopicMap.put("/open/agent/heartbeat", "stress-test-open-agent-heartbeat");
+        //agent节点状态，zk路径
+        urlTopicMap.put("/config/log/pradar/status", "stress-test-config-log-pradar-status");
+        urlTopicMap.put("/config/log/pradar/client", "stress-test-config-log-pradar-client");
+        //新增应用
+        urlTopicMap.put("/api/application/center/app/info", "stress-test-application-center-app-info");
     }
 
     /**
