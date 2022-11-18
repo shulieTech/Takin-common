@@ -1,11 +1,7 @@
 package io.shulie.takin.sdk.kafka.impl;
 
-import cn.chinaunicom.client.ThriftDeserializer;
-import cn.chinaunicom.client.UdpThriftSerializer;
-import cn.chinaunicom.pinpoint.thrift.dto.TStressTestAgentData;
 import cn.hutool.core.collection.ListUtil;
 import com.alibaba.fastjson.JSON;
-import com.pamirs.pradar.log.parser.DataType;
 import io.shulie.takin.sdk.kafka.MessageReceiveCallBack;
 import io.shulie.takin.sdk.kafka.MessageReceiveService;
 import io.shulie.takin.sdk.kafka.entity.MessageEntity;
@@ -15,21 +11,18 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 public class MessageReceiveServiceImpl implements MessageReceiveService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageReceiveServiceImpl.class.getName());
 
     private KafkaConsumer<String, byte[]> kafkaConsumer;
-    private ThriftDeserializer deserializer;
+    private MessageDeserializer deserializer;
     private Long sleepMills;
 
     @Override
@@ -72,8 +65,8 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.ByteArrayDeserializer.class);
         kafkaConsumer = new KafkaConsumer<>(props);
         try {
-            deserializer = new ThriftDeserializer();
-        } catch (TTransportException e) {
+            deserializer = new MessageDeserializer();
+        } catch (Exception e) {
             LOGGER.error("初始化反序列化工具失败", e);
         }
     }
@@ -98,11 +91,7 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
                         callBack.fail("接收到消息为空");
                         return;
                     }
-                    TStressTestAgentData tStressTestAgentData = deserializer.deserialize(bytes);
-                    MessageEntity messageEntity = new MessageEntity();
-                    messageEntity.setHeaders(this.getHeaders(tStressTestAgentData));
-                    Map map = JSON.parseObject(tStressTestAgentData.getStringValue(), Map.class);
-                    messageEntity.setBody(map);
+                    MessageEntity messageEntity = deserializer.deserializeJSON(bytes);;
                     callBack.success(messageEntity);
                 } catch (Exception e) {
                     callBack.fail(e.getMessage());
@@ -115,22 +104,6 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
                 LOGGER.error("休眠出现异常", e);
             }
         }
-
-    }
-
-    private Map<String, Object> getHeaders(TStressTestAgentData tStressTestAgentData) {
-        Map<String, Object> headers = new HashMap<>();
-        if (tStressTestAgentData != null) {
-            headers.put("userAppKey", tStressTestAgentData.getUserAppKey());
-            headers.put("tenantAppKey", tStressTestAgentData.getTenantAppKey());
-            headers.put("userId", tStressTestAgentData.getUserId());
-            headers.put("envCode", tStressTestAgentData.getEnvCode());
-            headers.put("agentExpand", tStressTestAgentData.getAgentExpand());
-            headers.put("dataType", tStressTestAgentData.getDataType());
-            headers.put("hostIp", tStressTestAgentData.getHostIp());
-            headers.put("version", tStressTestAgentData.getVersion());
-        }
-        return headers;
 
     }
 
