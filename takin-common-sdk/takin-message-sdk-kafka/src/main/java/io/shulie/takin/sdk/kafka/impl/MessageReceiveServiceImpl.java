@@ -1,5 +1,6 @@
 package io.shulie.takin.sdk.kafka.impl;
 
+import cn.chinaunicom.pinpoint.thrift.dto.TStressTestAgentData;
 import cn.hutool.core.collection.ListUtil;
 import com.alibaba.fastjson.JSON;
 import io.shulie.takin.sdk.kafka.MessageReceiveCallBack;
@@ -15,7 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public class MessageReceiveServiceImpl implements MessageReceiveService {
@@ -27,31 +30,29 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
 
     @Override
     public void init() {
-        boolean kafkaSwitch = MessageSwitchUtil.userKafkaSwitch();
-        if (!kafkaSwitch) {
-            LOGGER.warn("kafka开关处理关闭状态，不进行发送初始化");
-            return;
-        }
         String serverConfig = null;
         String sleepMillStr = null;
         try {
-            PropertiesReader propertiesReader = new PropertiesReader("kafka-sdk.properties");
-            serverConfig = propertiesReader.getProperty("kafka.sdk.bootstrap");
-            //环境变量优先级高于配置文件
-            sleepMillStr = System.getProperty("kafka.poll.timeout");
-            if (StringUtils.isBlank(sleepMillStr)) {
-                sleepMillStr = propertiesReader.getProperty("kafka.poll.timeout", "2000");
-            }
-            sleepMills = Long.parseLong(sleepMillStr);
+
         } catch (Exception e) {
             LOGGER.error("读取配置文件失败", e);
         }
 
-        String kafkaSdkBootstrap = System.getProperty("kafka.sdk.bootstrap");
-        if (kafkaSdkBootstrap != null) {
-            serverConfig = kafkaSdkBootstrap;
+        if (!MessageSwitchUtil.KAFKA_SDK_SWITCH) {
+            LOGGER.warn("kafka开关处理关闭状态，不进行发送初始化");
+            return;
         }
-        if (serverConfig == null) {
+        try {
+            serverConfig = PropertiesReader.getInstance().getProperty("kafka.sdk.bootstrap", "");
+            //环境变量优先级高于配置文件
+            sleepMillStr = PropertiesReader.getInstance().getProperty("kafka.poll.timeout", "2000");
+        } catch (Exception e) {
+            LOGGER.error("读取配置文件失败", e);
+        }
+
+        sleepMills = Long.parseLong(sleepMillStr);
+
+        if (!StringUtils.isBlank(serverConfig)) {
             LOGGER.info("kafka配置serverConfig未找到，不进行kafka发送初始化");
             return;
         }
@@ -78,7 +79,7 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
 
     @Override
     public void receive(List<String> topics, MessageReceiveCallBack callBack) {
-        if (kafkaConsumer == null){
+        if (kafkaConsumer == null) {
             return;
         }
         kafkaConsumer.subscribe(topics);
@@ -91,7 +92,8 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
                         callBack.fail("接收到消息为空");
                         return;
                     }
-                    MessageEntity messageEntity = deserializer.deserializeJSON(bytes);;
+                    MessageEntity messageEntity = deserializer.deserializeJSON(bytes);
+                    ;
                     callBack.success(messageEntity);
                 } catch (Exception e) {
                     callBack.fail(e.getMessage());
@@ -107,12 +109,28 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
 
     }
 
+    private Map<String, Object> getHeaders(TStressTestAgentData tStressTestAgentData) {
+        Map<String, Object> headers = new HashMap<>();
+        if (tStressTestAgentData != null) {
+            headers.put("userAppKey", tStressTestAgentData.getUserAppKey());
+            headers.put("tenantAppKey", tStressTestAgentData.getTenantAppKey());
+            headers.put("userId", tStressTestAgentData.getUserId());
+            headers.put("envCode", tStressTestAgentData.getEnvCode());
+            headers.put("agentExpand", tStressTestAgentData.getAgentExpand());
+            headers.put("dataType", tStressTestAgentData.getDataType());
+            headers.put("hostIp", tStressTestAgentData.getHostIp());
+            headers.put("version", tStressTestAgentData.getVersion());
+        }
+        return headers;
+
+    }
+
     public static void main(String[] args) throws Exception {
         MessageReceiveService kafkaMessageReceiveInstance = new KafkaSendServiceFactory().getKafkaMessageReceiveInstance();
         kafkaMessageReceiveInstance.receive(ListUtil.of("stress-test-agent-performance-basedata"), new MessageReceiveCallBack() {
             @Override
             public void success(MessageEntity messageEntity) {
-                System.out.println("成功"+ JSON.toJSONString(messageEntity.getBody()));
+                System.out.println("成功" + JSON.toJSONString(messageEntity.getBody()));
             }
 
             @Override

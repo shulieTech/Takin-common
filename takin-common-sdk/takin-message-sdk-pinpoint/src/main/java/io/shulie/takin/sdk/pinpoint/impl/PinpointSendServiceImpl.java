@@ -8,6 +8,7 @@ import com.pamirs.pradar.log.parser.DataType;
 import io.shulie.takin.sdk.kafka.HttpSender;
 import io.shulie.takin.sdk.kafka.MessageSendCallBack;
 import io.shulie.takin.sdk.kafka.MessageSendService;
+import io.shulie.takin.sdk.kafka.entity.MessageSerializer;
 import io.shulie.takin.sdk.kafka.util.MessageSwitchUtil;
 import io.shulie.takin.sdk.kafka.util.PropertiesReader;
 import org.apache.thrift.transport.TTransportException;
@@ -28,22 +29,17 @@ public class PinpointSendServiceImpl implements MessageSendService {
     private static final Logger LOGGER = LoggerFactory.getLogger(PinpointSendServiceImpl.class.getName());
     private UdpTransport udpTransport;
     private InetSocketAddress socketAddress;
-    private UdpThriftSerializer serializer;
     private Map<String, Byte> urlDataTypeMap;
+    private static MessageSerializer messageSerializer = new MessageSerializer();
 
     @Override
     public void init() {
-        boolean userKafkaSwitch = MessageSwitchUtil.userKafkaSwitch();
-        if (!userKafkaSwitch) {
+        if (!MessageSwitchUtil.KAFKA_SDK_SWITCH) {
             LOGGER.warn("pinpoint推送开关已关闭，不进行初始化");
             return;
         }
         try {
-            String property = System.getProperty("pradar.data.pusher.pinpoint.collector.address");
-            if (property == null) {
-                PropertiesReader propertiesReader = new PropertiesReader("kafka-sdk.properties");
-                property = propertiesReader.getProperty("pradar.data.pusher.pinpoint.collector.address", "192.168.1.112:9092");
-            }
+           String property = PropertiesReader.getInstance().getProperty("pradar.data.pusher.pinpoint.collector.addres","");
             LOGGER.info("获取到推送地址为:{}", property);
             String[] node = property.split(":");
             socketAddress = new InetSocketAddress(node[0], Integer.parseInt(node[1]));
@@ -53,12 +49,6 @@ public class PinpointSendServiceImpl implements MessageSendService {
 
         if (socketAddress == null) {
             LOGGER.error("初始化KafkaSendServiceImpl socketAddress");
-            return;
-        }
-        try {
-            serializer = new UdpThriftSerializer();
-        } catch (TTransportException e) {
-            LOGGER.error("初始化序列化工具失败", e);
             return;
         }
         this.createUdpTransport();
@@ -106,7 +96,7 @@ public class PinpointSendServiceImpl implements MessageSendService {
             }
         }
         try {
-            byte[] data = serializer.serialize(logData, true);
+            byte[] data = messageSerializer.serialize(logData, true);
             udpTransport.send(data);
         } catch (Exception e) {
             messageSendCallBack.fail(e.getMessage());
@@ -126,7 +116,7 @@ public class PinpointSendServiceImpl implements MessageSendService {
             logData.setDataType(dataType);
             logData.setHostIp(ip);
             logData.setVersion(version + "");
-            byte[] data = serializer.serialize(logData, true);
+            byte[] data = messageSerializer.serialize(logData, true);
             udpTransport.send(data);
         } catch (Exception e) {
             messageSendCallBack.fail(e.getMessage());
@@ -178,7 +168,5 @@ public class PinpointSendServiceImpl implements MessageSendService {
         urlDataTypeMap.put("/config/log/pradar/client", DataType.CONFIG_LOG_PARDAR_CLIENT);
         //新增应用
         urlDataTypeMap.put("/api/application/center/app/info", DataType.APPLICATION_CENTER_APP_INFO);
-
-
     }
 }

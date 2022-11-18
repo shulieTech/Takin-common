@@ -1,15 +1,9 @@
 package io.shulie.takin.sdk.kafka.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class MessageSwitchUtil {
 
-    public static boolean userKafkaSwitch(){
-        String sdkSwitchEnv = System.getProperty("kafka.sdk.switch", "false");
-        if ("true".equals(sdkSwitchEnv)){
-            return true;
-        }
-        PropertiesReader reader = new PropertiesReader("kafka-sdk.properties");
-        String sdkSwitch = reader.getProperty("kafka.sdk.switch", "false");
-        return "true".equals(sdkSwitch);
-    }
+   public static boolean KAFKA_SDK_SWITCH = !StringUtils.equals(PropertiesReader.getInstance().getProperty("kafka.sdk.switch","false"),"false");
 
 }

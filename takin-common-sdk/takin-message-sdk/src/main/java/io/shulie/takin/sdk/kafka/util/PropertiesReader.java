@@ -12,14 +12,15 @@ import java.util.Properties;
  * @since 2021/3/2 2:50 下午
  */
 public class PropertiesReader {
-    private String resourceName;
+    private final static PropertiesReader INSTANCE = new PropertiesReader();
+    private static final String DEFAULT_RESOURCE_NAME = "kafka-sdk.properties";
+    private String resourceName = DEFAULT_RESOURCE_NAME;
     private Properties props;
 
-    public PropertiesReader(String resourceName) {
+    public PropertiesReader() {
         if (resourceName == null) {
             throw new IllegalArgumentException("resourceName can't be null!");
         }
-        this.resourceName = resourceName;
         if (!this.resourceName.startsWith("/")) {
             this.resourceName = "/" + this.resourceName;
         }
@@ -50,7 +51,7 @@ public class PropertiesReader {
      * @param key
      * @return
      */
-    public String getProperty(String key) {
+    private String getProperty(String key) {
         return this.props.getProperty(key);
     }
 
@@ -63,7 +64,7 @@ public class PropertiesReader {
      */
     public String getProperty(String key, String defaultValue) {
         String value = System.getProperty(key);
-        if (value == null) {
+        if (StringUtils.isBlank(value)) {
             value = getProperty(key);
         }
         if (StringUtils.isBlank(value)) {
@@ -72,48 +73,8 @@ public class PropertiesReader {
         return value;
     }
 
-    /**
-     * 根据 key 获取 Int 配置
-     *
-     * @param key
-     * @param defaultValue
-     * @return
-     */
-    public Integer getIntProperty(String key, Integer defaultValue) {
-        String value = getProperty(key);
-        if (NumberUtils.isDigits(value)) {
-            return Integer.valueOf(value);
-        }
-        return defaultValue;
-    }
-
-    /**
-     * 根据 key 获取 Long配置
-     *
-     * @param key
-     * @param defaultValue
-     * @return
-     */
-    public Long getLongProperty(String key, Long defaultValue) {
-        String value = getProperty(key);
-        if (NumberUtils.isDigits(value)) {
-            return Long.valueOf(value);
-        }
-        return defaultValue;
-    }
-
-    /**
-     * 根据 key 获取 Boolean 配置
-     *
-     * @param key
-     * @param defaultValue
-     * @return
-     */
-    public Boolean getBooleanProperty(String key, Boolean defaultValue) {
-        String value = getProperty(key);
-        if (StringUtils.isBlank(value)) {
-            return defaultValue;
-        }
-        return Boolean.valueOf(value);
+    public static PropertiesReader getInstance()
+    {
+        return INSTANCE;
     }
 }

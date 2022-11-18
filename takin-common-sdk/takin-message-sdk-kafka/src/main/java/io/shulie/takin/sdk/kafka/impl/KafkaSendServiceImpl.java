@@ -1,20 +1,19 @@
 package io.shulie.takin.sdk.kafka.impl;
 
-import cn.chinaunicom.client.UdpThriftSerializer;
 import cn.chinaunicom.pinpoint.thrift.dto.TStressTestAgentData;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.crypto.digest.MD5;
-import com.alibaba.fastjson.JSON;
 import com.pamirs.pradar.log.parser.DataType;
 import io.shulie.takin.sdk.kafka.HttpSender;
 import io.shulie.takin.sdk.kafka.MessageSendCallBack;
 import io.shulie.takin.sdk.kafka.MessageSendService;
+import io.shulie.takin.sdk.kafka.entity.MessageSerializer;
 import io.shulie.takin.sdk.kafka.util.MessageSwitchUtil;
 import io.shulie.takin.sdk.kafka.util.PropertiesReader;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,44 +24,25 @@ import java.util.Properties;
 public class KafkaSendServiceImpl implements MessageSendService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSendServiceImpl.class.getName());
+    private static MessageSerializer messageSerializer = new MessageSerializer();
     private KafkaProducer<String, byte[]> producer;
 
     private Map<String, String> urlTopicMap;
 
     private Map<Byte, String> dataTypeTopicMap;
 
-    private UdpThriftSerializer serializer;
-
     @Override
     public void init() {
-        boolean kafkaSwitch = MessageSwitchUtil.userKafkaSwitch();
-        if (!kafkaSwitch) {
+        if (!MessageSwitchUtil.KAFKA_SDK_SWITCH) {
             LOGGER.warn("kafka开关处理关闭状态，不进行发送初始化");
             return;
         }
-        String serverConfig = null;
-        try {
-            PropertiesReader propertiesReader = new PropertiesReader("kafka-sdk.properties");
-            serverConfig = propertiesReader.getProperty("kafka.sdk.bootstrap");
-        } catch (Exception e) {
-            LOGGER.error("读取配置文件失败", e);
-        }
-
-        String kafkaSdkBootstrap = System.getProperty("kafka.sdk.bootstrap");
-        if (kafkaSdkBootstrap != null) {
-            serverConfig = kafkaSdkBootstrap;
-        }
-        if (serverConfig == null) {
+        String serverConfig = PropertiesReader.getInstance().getProperty("kafka.sdk.bootstrap", "");
+        if (StringUtils.isBlank(serverConfig)) {
             LOGGER.info("kafka配置serverConfig未找到，不进行kafka发送初始化");
             return;
         }
         LOGGER.info("kafka发送获取到的推送地址为:{}", serverConfig);
-        try {
-            serializer = new UdpThriftSerializer();
-        } catch (TTransportException e) {
-            LOGGER.error("初始化序列化工具失败", e);
-            return;
-        }
         Properties props = new Properties();
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.ByteArraySerializer.class);
@@ -129,7 +109,7 @@ public class KafkaSendServiceImpl implements MessageSendService {
 
     private void sendMessage(String topic, String key, TStressTestAgentData logData, MessageSendCallBack messageSendCallBack) {
         try {
-            byte[] serialize = serializer.serialize(logData,false);
+            byte[] serialize = messageSerializer.serialize(logData, false);
             ProducerRecord<String, byte[]> producerRecord = new ProducerRecord<String, byte[]>(topic, key, serialize);
             producer.send(producerRecord);
             messageSendCallBack.success();
