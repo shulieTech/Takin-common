@@ -4,6 +4,7 @@ import cn.chinaunicom.client.UdpThriftSerializer;
 import cn.chinaunicom.pinpoint.thrift.dto.TStressTestAgentData;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.crypto.digest.MD5;
+import com.alibaba.fastjson.JSON;
 import com.pamirs.pradar.log.parser.DataType;
 import io.shulie.takin.sdk.kafka.HttpSender;
 import io.shulie.takin.sdk.kafka.MessageSendCallBack;
@@ -63,6 +64,8 @@ public class KafkaSendServiceImpl implements MessageSendService {
             return;
         }
         Properties props = new Properties();
+        props.put("key.serializer", org.apache.kafka.common.serialization.StringSerializer.class);
+        props.put("value.serializer", org.apache.kafka.common.serialization.StringSerializer.class);
         this.initUrlTopicMap(null);
         this.initDataTypeTopicMap(null);
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, serverConfig);
@@ -209,4 +212,26 @@ public class KafkaSendServiceImpl implements MessageSendService {
         dataTypeTopicMap.put(DataType.CONFCENTER_APPLICATIONMNT_UPDATE_APPLICATIONAGENT, "stress-test-confcenter-applicationmnt-update-applicationagent");
     }
 
+    public static void main(String[] args) {
+        MessageSendService kafkaMessageInstance = new KafkaSendServiceFactory().getKafkaMessageInstance();
+        Map<String,String> body = new HashMap<>();
+        body.put("test","test001");
+        body.put("test2","test002");
+        kafkaMessageInstance.send("/api/agent/performance/basedata", new HashMap<>(), JSON.toJSONString(body), new MessageSendCallBack() {
+            @Override
+            public void success() {
+                System.out.println("发送成功");
+            }
+
+            @Override
+            public void fail(String errorMessage) {
+                System.out.println("errorMessage:"+ errorMessage);
+            }
+        }, new HttpSender() {
+            @Override
+            public void sendMessage() {
+
+            }
+        });
+    }
 }
