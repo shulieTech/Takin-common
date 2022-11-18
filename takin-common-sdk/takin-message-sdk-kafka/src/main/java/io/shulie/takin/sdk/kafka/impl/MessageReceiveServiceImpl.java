@@ -32,12 +32,6 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
     public void init() {
         String serverConfig = null;
         String sleepMillStr = null;
-        try {
-
-        } catch (Exception e) {
-            LOGGER.error("读取配置文件失败", e);
-        }
-
         if (!MessageSwitchUtil.KAFKA_SDK_SWITCH) {
             LOGGER.warn("kafka开关处理关闭状态，不进行发送初始化");
             return;
@@ -52,7 +46,7 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
 
         sleepMills = Long.parseLong(sleepMillStr);
 
-        if (!StringUtils.isBlank(serverConfig)) {
+        if (StringUtils.isBlank(serverConfig)) {
             LOGGER.info("kafka配置serverConfig未找到，不进行kafka发送初始化");
             return;
         }
