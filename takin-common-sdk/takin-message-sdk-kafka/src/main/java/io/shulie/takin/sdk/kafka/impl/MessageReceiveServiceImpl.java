@@ -1,8 +1,11 @@
 package io.shulie.takin.sdk.kafka.impl;
 
 import cn.chinaunicom.client.ThriftDeserializer;
+import cn.chinaunicom.client.UdpThriftSerializer;
 import cn.chinaunicom.pinpoint.thrift.dto.TStressTestAgentData;
+import cn.hutool.core.collection.ListUtil;
 import com.alibaba.fastjson.JSON;
+import com.pamirs.pradar.log.parser.DataType;
 import io.shulie.takin.sdk.kafka.MessageReceiveCallBack;
 import io.shulie.takin.sdk.kafka.MessageReceiveService;
 import io.shulie.takin.sdk.kafka.entity.MessageEntity;
@@ -65,7 +68,8 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
         props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 100);
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, serverConfig);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "kafka-sdk-consumer");
-
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.ByteArrayDeserializer.class);
         kafkaConsumer = new KafkaConsumer<>(props);
         try {
             deserializer = new ThriftDeserializer();
@@ -128,5 +132,20 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
         }
         return headers;
 
+    }
+
+    public static void main(String[] args) throws Exception {
+        MessageReceiveService kafkaMessageReceiveInstance = new KafkaSendServiceFactory().getKafkaMessageReceiveInstance();
+        kafkaMessageReceiveInstance.receive(ListUtil.of("stress-test-agent-performance-basedata"), new MessageReceiveCallBack() {
+            @Override
+            public void success(MessageEntity messageEntity) {
+                System.out.println("成功"+ JSON.toJSONString(messageEntity.getBody()));
+            }
+
+            @Override
+            public void fail(String errorMessage) {
+                System.out.println("失败:" + errorMessage);
+            }
+        });
     }
 }

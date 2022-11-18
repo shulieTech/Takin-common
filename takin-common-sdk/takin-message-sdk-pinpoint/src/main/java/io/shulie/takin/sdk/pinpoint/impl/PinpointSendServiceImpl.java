@@ -106,7 +106,7 @@ public class PinpointSendServiceImpl implements MessageSendService {
             }
         }
         try {
-            byte[] data = serializer.serialize(logData);
+            byte[] data = serializer.serialize(logData, true);
             udpTransport.send(data);
         } catch (Exception e) {
             messageSendCallBack.fail(e.getMessage());
@@ -126,7 +126,7 @@ public class PinpointSendServiceImpl implements MessageSendService {
             logData.setDataType(dataType);
             logData.setHostIp(ip);
             logData.setVersion(version + "");
-            byte[] data = serializer.serialize(logData);
+            byte[] data = serializer.serialize(logData, true);
             udpTransport.send(data);
         } catch (Exception e) {
             messageSendCallBack.fail(e.getMessage());

@@ -64,8 +64,8 @@ public class KafkaSendServiceImpl implements MessageSendService {
             return;
         }
         Properties props = new Properties();
-        props.put("key.serializer", org.apache.kafka.common.serialization.StringSerializer.class);
-        props.put("value.serializer", org.apache.kafka.common.serialization.StringSerializer.class);
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.StringSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.ByteArraySerializer.class);
         this.initUrlTopicMap(null);
         this.initDataTypeTopicMap(null);
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, serverConfig);
@@ -129,7 +129,7 @@ public class KafkaSendServiceImpl implements MessageSendService {
 
     private void sendMessage(String topic, String key, TStressTestAgentData logData, MessageSendCallBack messageSendCallBack) {
         try {
-            byte[] serialize = serializer.serialize(logData);
+            byte[] serialize = serializer.serialize(logData,false);
             ProducerRecord<String, byte[]> producerRecord = new ProducerRecord<String, byte[]>(topic, key, serialize);
             producer.send(producerRecord);
             messageSendCallBack.success();
@@ -212,26 +212,4 @@ public class KafkaSendServiceImpl implements MessageSendService {
         dataTypeTopicMap.put(DataType.CONFCENTER_APPLICATIONMNT_UPDATE_APPLICATIONAGENT, "stress-test-confcenter-applicationmnt-update-applicationagent");
     }
 
-    public static void main(String[] args) {
-        MessageSendService kafkaMessageInstance = new KafkaSendServiceFactory().getKafkaMessageInstance();
-        Map<String,String> body = new HashMap<>();
-        body.put("test","test001");
-        body.put("test2","test002");
-        kafkaMessageInstance.send("/api/agent/performance/basedata", new HashMap<>(), JSON.toJSONString(body), new MessageSendCallBack() {
-            @Override
-            public void success() {
-                System.out.println("发送成功");
-            }
-
-            @Override
-            public void fail(String errorMessage) {
-                System.out.println("errorMessage:"+ errorMessage);
-            }
-        }, new HttpSender() {
-            @Override
-            public void sendMessage() {
-
-            }
-        });
-    }
 }
