@@ -1,5 +1,7 @@
 package io.shulie.takin.sdk.kafka.impl;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.BufferedReader;
@@ -16,7 +18,7 @@ public class SdkHttpServletRequest implements HttpServletRequest {
     private String hostIp;
 
     public SdkHttpServletRequest(Map<String, Object> headers) {
-        if (headers.containsKey("hostIp")){
+        if (headers.containsKey("hostIp") && StringUtils.isNotBlank("hostIp")) {
             hostIp = headers.get("hostIp").toString();
         }
     }
@@ -38,7 +40,7 @@ public class SdkHttpServletRequest implements HttpServletRequest {
 
     @Override
     public String getHeader(String s) {
-        if ("HTTP_CLIENT_IP".equals(s)){
+        if ("HTTP_CLIENT_IP".equals(s)) {
             return hostIp;
         }
         return null;

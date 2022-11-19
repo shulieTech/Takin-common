@@ -168,5 +168,7 @@ public class PinpointSendServiceImpl implements MessageSendService {
         urlDataTypeMap.put("/config/log/pradar/client", DataType.CONFIG_LOG_PARDAR_CLIENT);
         //新增应用
         urlDataTypeMap.put("/api/application/center/app/info", DataType.APPLICATION_CENTER_APP_INFO);
+        //agent心跳
+        urlDataTypeMap.put("api/agent/heartbeat", DataType.API_AGENT_HEARTBEAT);
     }
 }

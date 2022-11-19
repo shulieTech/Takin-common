@@ -78,7 +78,7 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
         }
         kafkaConsumer.subscribe(topics);
         while (true) {
-            ConsumerRecords<String, byte[]> consumerRecords = kafkaConsumer.poll(Duration.ofMillis(300));
+            ConsumerRecords<String, byte[]> consumerRecords = kafkaConsumer.poll(300);
             consumerRecords.forEach(record -> {
                 try {
                     byte[] bytes = record.value();
@@ -93,12 +93,6 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
                     callBack.fail(e.getMessage());
                 }
             });
-
-            try {
-                Thread.sleep(sleepMills);
-            } catch (InterruptedException e) {
-                LOGGER.error("休眠出现异常", e);
-            }
         }
 
     }

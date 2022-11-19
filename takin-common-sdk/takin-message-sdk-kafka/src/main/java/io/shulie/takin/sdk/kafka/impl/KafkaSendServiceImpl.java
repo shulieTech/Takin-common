@@ -156,6 +156,8 @@ public class KafkaSendServiceImpl implements MessageSendService {
         urlTopicMap.put("/config/log/pradar/client", "stress-test-config-log-pradar-client");
         //新增应用
         urlTopicMap.put("/api/application/center/app/info", "stress-test-application-center-app-info");
+        //agent心跳
+        urlTopicMap.put("api/agent/heartbeat", "stress-test-api-agent-heartbeat");
     }
 
     /**
@@ -192,4 +194,20 @@ public class KafkaSendServiceImpl implements MessageSendService {
         dataTypeTopicMap.put(DataType.CONFCENTER_APPLICATIONMNT_UPDATE_APPLICATIONAGENT, "stress-test-confcenter-applicationmnt-update-applicationagent");
     }
 
+    public static void main(String[] args) {
+        String logData = "xxxxxxxxxxxxxxx";
+        MessageSendService messageSendService = new KafkaSendServiceFactory().getKafkaMessageInstance();
+        if (StringUtils.isNotBlank(logData)) {
+            messageSendService.send(DataType.PRESSURE_ENGINE_TRACE_LOG, 16, logData, "127.0.0.1", new MessageSendCallBack() {
+                @Override
+                public void success() {
+                }
+
+                @Override
+                public void fail(String errorMessage) {
+
+                }
+            });
+        }
+    }
 }
