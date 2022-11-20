@@ -65,8 +65,6 @@
         <module>takin-common-sdk</module>
         <module>takin-common-job</module>
         <module>takin-common-command-channel</module>
-        <module>takin-common-sdk/takin-message-sdk-kafka</module>
-        <module>takin-common-sdk/takin-message-sdk-pinpoint</module>
     </modules>
 
     <dependencyManagement>
