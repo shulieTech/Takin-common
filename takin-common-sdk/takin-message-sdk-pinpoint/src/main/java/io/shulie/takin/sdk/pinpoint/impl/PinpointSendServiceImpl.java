@@ -1,17 +1,15 @@
 package io.shulie.takin.sdk.pinpoint.impl;
 
-import cn.chinaunicom.client.UdpThriftSerializer;
 import cn.chinaunicom.client.UdpTransport;
 import cn.chinaunicom.pinpoint.thrift.dto.TStressTestAgentData;
 import cn.hutool.core.collection.CollectionUtil;
-import com.pamirs.pradar.log.parser.DataType;
+import io.shulie.takin.sdk.kafka.DataType;
 import io.shulie.takin.sdk.kafka.HttpSender;
 import io.shulie.takin.sdk.kafka.MessageSendCallBack;
 import io.shulie.takin.sdk.kafka.MessageSendService;
 import io.shulie.takin.sdk.kafka.entity.MessageSerializer;
 import io.shulie.takin.sdk.kafka.util.MessageSwitchUtil;
 import io.shulie.takin.sdk.kafka.util.PropertiesReader;
-import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +37,7 @@ public class PinpointSendServiceImpl implements MessageSendService {
             return;
         }
         try {
-           String property = PropertiesReader.getInstance().getProperty("pradar.data.pusher.pinpoint.collector.addres","");
+            String property = PropertiesReader.getInstance().getProperty("pradar.data.pusher.pinpoint.collector.addres", "");
             LOGGER.info("获取到推送地址为:{}", property);
             String[] node = property.split(":");
             socketAddress = new InetSocketAddress(node[0], Integer.parseInt(node[1]));

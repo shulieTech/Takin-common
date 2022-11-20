@@ -18,7 +18,7 @@ public class SdkHttpServletRequest implements HttpServletRequest {
     private String hostIp;
 
     public SdkHttpServletRequest(Map<String, Object> headers) {
-        if (headers.containsKey("hostIp") && StringUtils.isNotBlank("hostIp")) {
+        if (headers.containsKey("hostIp") && null != headers.get("hostIp")) {
             hostIp = headers.get("hostIp").toString();
         }
     }

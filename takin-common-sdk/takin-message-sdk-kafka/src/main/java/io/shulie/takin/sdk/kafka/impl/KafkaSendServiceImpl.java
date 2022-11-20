@@ -3,7 +3,7 @@ package io.shulie.takin.sdk.kafka.impl;
 import cn.chinaunicom.pinpoint.thrift.dto.TStressTestAgentData;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.crypto.digest.MD5;
-import com.pamirs.pradar.log.parser.DataType;
+import io.shulie.takin.sdk.kafka.DataType;
 import io.shulie.takin.sdk.kafka.HttpSender;
 import io.shulie.takin.sdk.kafka.MessageSendCallBack;
 import io.shulie.takin.sdk.kafka.MessageSendService;
@@ -104,6 +104,9 @@ public class KafkaSendServiceImpl implements MessageSendService {
         logData.setDataType(dataType);
         logData.setHostIp(ip);
         logData.setVersion(version + "");
+        if (DataType.PRESSURE_ENGINE_TRACE_LOG == dataType){
+            logData.setDataType(DataType.TRACE_LOG);
+        }
         this.sendMessage(topic, key, logData, messageSendCallBack);
     }
 
@@ -194,20 +197,4 @@ public class KafkaSendServiceImpl implements MessageSendService {
         dataTypeTopicMap.put(DataType.CONFCENTER_APPLICATIONMNT_UPDATE_APPLICATIONAGENT, "stress-test-confcenter-applicationmnt-update-applicationagent");
     }
 
-    public static void main(String[] args) {
-        String logData = "xxxxxxxxxxxxxxx";
-        MessageSendService messageSendService = new KafkaSendServiceFactory().getKafkaMessageInstance();
-        if (StringUtils.isNotBlank(logData)) {
-            messageSendService.send(DataType.PRESSURE_ENGINE_TRACE_LOG, 16, logData, "127.0.0.1", new MessageSendCallBack() {
-                @Override
-                public void success() {
-                }
-
-                @Override
-                public void fail(String errorMessage) {
-
-                }
-            });
-        }
-    }
 }
