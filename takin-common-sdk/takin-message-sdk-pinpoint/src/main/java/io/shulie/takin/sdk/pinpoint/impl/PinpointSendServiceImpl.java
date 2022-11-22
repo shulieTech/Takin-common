@@ -37,7 +37,7 @@ public class PinpointSendServiceImpl implements MessageSendService {
             return;
         }
         try {
-            String property = PropertiesReader.getInstance().getProperty("pradar.data.pusher.pinpoint.collector.addres", "");
+            String property = PropertiesReader.getInstance().getProperty("pradar.data.pusher.pinpoint.collector.address", "");
             LOGGER.info("获取到推送地址为:{}", property);
             String[] node = property.split(":");
             socketAddress = new InetSocketAddress(node[0], Integer.parseInt(node[1]));
