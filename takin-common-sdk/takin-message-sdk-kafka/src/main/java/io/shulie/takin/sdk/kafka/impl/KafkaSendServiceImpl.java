@@ -43,12 +43,26 @@ public class KafkaSendServiceImpl implements MessageSendService {
             return;
         }
         LOGGER.info("kafka发送获取到的推送地址为:{}", serverConfig);
+
+        String authFlag = PropertiesReader.getInstance().getProperty("kafka.auth.flag", "false");
+        LOGGER.info("是否使用权限认证:{}", authFlag);
+
         Properties props = new Properties();
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.ByteArraySerializer.class);
         this.initUrlTopicMap(null);
         this.initDataTypeTopicMap(null);
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, serverConfig);
+
+        if ("true".equals(authFlag)) {
+            String securityProtocol = PropertiesReader.getInstance().getProperty("security.protocol", "");
+            String saslMechanism = PropertiesReader.getInstance().getProperty("sasl.mechanism", "");
+            String saslJaasConfig = PropertiesReader.getInstance().getProperty("sasl.jaas.config", "");
+
+            props.put("security.protocol", securityProtocol);
+            props.put("sasl.mechanism", saslMechanism);
+            props.put("sasl.jaas.config", saslJaasConfig);
+        }
         producer = new KafkaProducer<>(props);
     }
 
@@ -104,7 +118,7 @@ public class KafkaSendServiceImpl implements MessageSendService {
         logData.setDataType(dataType);
         logData.setHostIp(ip);
         logData.setVersion(version + "");
-        if (DataType.PRESSURE_ENGINE_TRACE_LOG == dataType){
+        if (DataType.PRESSURE_ENGINE_TRACE_LOG == dataType) {
             logData.setDataType(DataType.TRACE_LOG);
         }
         this.sendMessage(topic, key, logData, messageSendCallBack);
@@ -161,6 +175,7 @@ public class KafkaSendServiceImpl implements MessageSendService {
         urlTopicMap.put("/api/application/center/app/info", "stress-test-application-center-app-info");
         //agent心跳
         urlTopicMap.put("api/agent/heartbeat", "stress-test-api-agent-heartbeat");
+        urlTopicMap.put("test", "stress-test-agent-log");
     }
 
     /**

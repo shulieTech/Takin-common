@@ -15,7 +15,6 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,12 +51,25 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
         }
         LOGGER.info("消息接收获取到地址为:{},超时时间为:{}", serverConfig, sleepMillStr);
 
+        String authFlag = PropertiesReader.getInstance().getProperty("kafka.auth.flag", "false");
+        LOGGER.info("是否使用权限认证:{}", authFlag);
+
         Properties props = new Properties();
         props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 100);
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, serverConfig);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "kafka-sdk-consumer");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.ByteArrayDeserializer.class);
+
+        if ("true".equals(authFlag)) {
+            String securityProtocol = PropertiesReader.getInstance().getProperty("security.protocol", "");
+            String saslMechanism = PropertiesReader.getInstance().getProperty("sasl.mechanism", "");
+            String saslJaasConfig = PropertiesReader.getInstance().getProperty("sasl.jaas.config", "");
+
+            props.put("security.protocol", securityProtocol);
+            props.put("sasl.mechanism", saslMechanism);
+            props.put("sasl.jaas.config", saslJaasConfig);
+        }
         kafkaConsumer = new KafkaConsumer<>(props);
         try {
             deserializer = new MessageDeserializer();
@@ -87,7 +99,6 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
                         return;
                     }
                     MessageEntity messageEntity = deserializer.deserializeJSON(bytes);
-                    ;
                     callBack.success(messageEntity);
                 } catch (Exception e) {
                     callBack.fail(e.getMessage());
@@ -113,18 +124,4 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
 
     }
 
-    public static void main(String[] args) throws Exception {
-        MessageReceiveService kafkaMessageReceiveInstance = new KafkaSendServiceFactory().getKafkaMessageReceiveInstance();
-        kafkaMessageReceiveInstance.receive(ListUtil.of("stress-test-agent-performance-basedata"), new MessageReceiveCallBack() {
-            @Override
-            public void success(MessageEntity messageEntity) {
-                System.out.println("成功" + JSON.toJSONString(messageEntity.getBody()));
-            }
-
-            @Override
-            public void fail(String errorMessage) {
-                System.out.println("失败:" + errorMessage);
-            }
-        });
-    }
 }

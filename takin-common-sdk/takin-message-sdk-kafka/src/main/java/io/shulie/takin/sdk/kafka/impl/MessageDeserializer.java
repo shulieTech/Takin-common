@@ -3,7 +3,7 @@ package io.shulie.takin.sdk.kafka.impl;
 import cn.chinaunicom.client.ThriftDeserializer;
 import cn.chinaunicom.pinpoint.thrift.dto.TStressTestAgentData;
 import com.alibaba.fastjson.JSON;
-import com.google.common.collect.Maps;
+
 import io.shulie.takin.sdk.kafka.entity.MessageEntity;
 import org.apache.thrift.TException;
 import org.apache.thrift.transport.TTransportException;
@@ -55,7 +55,7 @@ public class MessageDeserializer implements Serializable {
             TStressTestAgentData tStressTestAgentData = thriftDeserializer.deserialize(bytes);
             MessageEntity messageEntity = new MessageEntity();
             messageEntity.setHeaders(this.getHeaders(tStressTestAgentData));
-            Map<String, String> map = Maps.newHashMap();
+            Map<String, String> map = new HashMap<>();
             map.put("content", tStressTestAgentData.getStringValue());
             messageEntity.setBody(map);
             return messageEntity;

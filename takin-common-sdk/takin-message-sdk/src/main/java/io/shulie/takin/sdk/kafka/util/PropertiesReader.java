@@ -1,8 +1,9 @@
 package io.shulie.takin.sdk.kafka.util;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -14,10 +15,11 @@ import java.util.Properties;
 public class PropertiesReader {
     private final static PropertiesReader INSTANCE = new PropertiesReader();
     private static final String DEFAULT_RESOURCE_NAME = "kafka-sdk.properties";
-    private String resourceName = DEFAULT_RESOURCE_NAME;
+    private String resourceName;
     private Properties props;
 
     public PropertiesReader() {
+        resourceName = System.getProperty("kafka.sdk.properties.path", DEFAULT_RESOURCE_NAME);
         if (resourceName == null) {
             throw new IllegalArgumentException("resourceName can't be null!");
         }
@@ -28,9 +30,15 @@ public class PropertiesReader {
     }
 
     private void init() {
-        InputStream in = PropertiesReader.class.getResourceAsStream(resourceName);
+        InputStream in = null;
         this.props = new Properties();
         try {
+            File configFile = new File(resourceName);
+            if (configFile.exists()) {
+                in = new FileInputStream(configFile);
+            } else {
+                in = PropertiesReader.class.getResourceAsStream(resourceName);
+            }
             props.load(in);
         } catch (IOException e) {
             throw new RuntimeException("read resource " + resourceName + " error!", e);
@@ -73,8 +81,7 @@ public class PropertiesReader {
         return value;
     }
 
-    public static PropertiesReader getInstance()
-    {
+    public static PropertiesReader getInstance() {
         return INSTANCE;
     }
 }
