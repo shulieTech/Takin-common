@@ -29,11 +29,10 @@ public enum ActionTypeEnum {
     ENABLE_DISABLE(6, "启用禁用"),
     DOWNLOAD(7, "下载"),
 
-    REPORT(8,"报告"),
-    PIGEONHOLE(9,"归档"),
-    SHARE(10,"共享")
-
-    ;
+    REPORT(8, "报告"),
+    PIGEONHOLE(9, "归档"),
+    SHARE(10, "共享"),
+    COPY(11, "复制");
 
     private Integer code;
     private String cname;
