@@ -16,4 +16,10 @@ public class KafkaSendServiceFactory {
         messageReceiveService.init();
         return messageReceiveService;
     }
+
+    public MessageReceiveService getKafkaMessageReceiveInstance(String groupId){
+        MessageReceiveServiceImpl messageReceiveService = new MessageReceiveServiceImpl(groupId);
+        messageReceiveService.init();
+        return messageReceiveService;
+    }
 }

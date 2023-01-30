@@ -25,7 +25,13 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
 
     private KafkaConsumer<String, byte[]> kafkaConsumer;
     private MessageDeserializer deserializer;
-    private Long sleepMills;
+    private String groupId;
+
+    public MessageReceiveServiceImpl(){}
+
+    public MessageReceiveServiceImpl(String groupId){
+        this.groupId = groupId;
+    }
 
     @Override
     public void init() {
@@ -43,8 +49,6 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
             LOGGER.error("读取配置文件失败", e);
         }
 
-        sleepMills = Long.parseLong(sleepMillStr);
-
         if (StringUtils.isBlank(serverConfig)) {
             LOGGER.info("kafka配置serverConfig未找到，不进行kafka发送初始化");
             return;
@@ -58,6 +62,9 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
         props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 100);
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, serverConfig);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "kafka-sdk-consumer");
+        if (StringUtils.isNotBlank(groupId)){
+            props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
+        }
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.ByteArrayDeserializer.class);
 
