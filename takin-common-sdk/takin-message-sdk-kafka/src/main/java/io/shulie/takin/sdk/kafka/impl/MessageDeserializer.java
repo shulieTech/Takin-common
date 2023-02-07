@@ -41,6 +41,7 @@ public class MessageDeserializer implements Serializable {
 
     /**
      * 反序列化thrift对象
+     *
      * @param bytes
      * @return
      */
@@ -48,8 +49,7 @@ public class MessageDeserializer implements Serializable {
 
         try {
             ThriftDeserializer thriftDeserializer = THREAD_LOCAL.get();
-            if (thriftDeserializer == null)
-            {
+            if (thriftDeserializer == null) {
                 return null;
             }
             TStressTestAgentData tStressTestAgentData = thriftDeserializer.deserialize(bytes);
@@ -67,21 +67,27 @@ public class MessageDeserializer implements Serializable {
 
     /**
      * 反序列化thrift对象,转为json
+     *
      * @param bytes
      * @return
      */
-    public MessageEntity deserializeJSON(byte[] bytes) {
+    public MessageEntity deserializeJSON(byte[] bytes, boolean isStringValue) {
 
         try {
             ThriftDeserializer thriftDeserializer = THREAD_LOCAL.get();
-            if (thriftDeserializer == null)
-            {
+            if (thriftDeserializer == null) {
                 return null;
             }
             TStressTestAgentData tStressTestAgentData = thriftDeserializer.deserialize(bytes);
             MessageEntity messageEntity = new MessageEntity();
             messageEntity.setHeaders(this.getHeaders(tStressTestAgentData));
-            Map map = JSON.parseObject(tStressTestAgentData.getStringValue(), Map.class);
+            Map map;
+            if (isStringValue) {
+                map = new HashMap<>();
+                map.put("content", tStressTestAgentData.getStringValue());
+            } else {
+                map = JSON.parseObject(tStressTestAgentData.getStringValue(), Map.class);
+            }
             messageEntity.setBody(map);
             return messageEntity;
         } catch (TException e) {
@@ -92,6 +98,7 @@ public class MessageDeserializer implements Serializable {
 
     /**
      * 获取头信息
+     *
      * @param tStressTestAgentData
      * @return
      */

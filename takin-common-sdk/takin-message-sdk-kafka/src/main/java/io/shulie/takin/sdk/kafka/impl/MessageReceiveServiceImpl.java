@@ -15,10 +15,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 public class MessageReceiveServiceImpl implements MessageReceiveService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageReceiveServiceImpl.class.getName());
@@ -26,10 +23,12 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
     private KafkaConsumer<String, byte[]> kafkaConsumer;
     private MessageDeserializer deserializer;
     private String groupId;
+    private List<String> stringValueTopic = new ArrayList<>();
 
-    public MessageReceiveServiceImpl(){}
+    public MessageReceiveServiceImpl() {
+    }
 
-    public MessageReceiveServiceImpl(String groupId){
+    public MessageReceiveServiceImpl(String groupId) {
         this.groupId = groupId;
     }
 
@@ -62,7 +61,7 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
         props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 100);
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, serverConfig);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "kafka-sdk-consumer");
-        if (StringUtils.isNotBlank(groupId)){
+        if (StringUtils.isNotBlank(groupId)) {
             props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         }
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.StringDeserializer.class);
@@ -83,6 +82,8 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
         } catch (Exception e) {
             LOGGER.error("初始化反序列化工具失败", e);
         }
+        stringValueTopic.add("stress-test-engine-pressure-data");
+        stringValueTopic.add("stress-test-agent-monitor");
     }
 
     @Override
@@ -97,38 +98,26 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
         }
         kafkaConsumer.subscribe(topics);
         while (true) {
-            ConsumerRecords<String, byte[]> consumerRecords = kafkaConsumer.poll(300);
-            consumerRecords.forEach(record -> {
-                try {
-                    byte[] bytes = record.value();
-                    if (bytes == null) {
-                        callBack.fail("接收到消息为空");
-                        return;
+            try {
+                ConsumerRecords<String, byte[]> consumerRecords = kafkaConsumer.poll(300);
+                consumerRecords.forEach(record -> {
+                    try {
+                        byte[] bytes = record.value();
+                        if (bytes == null) {
+                            callBack.fail("接收到消息为空");
+                            return;
+                        }
+                        MessageEntity messageEntity = deserializer.deserializeJSON(bytes, stringValueTopic.contains(record.topic()));
+                        callBack.success(messageEntity);
+                    } catch (Exception e) {
+                        callBack.fail(e.getMessage());
                     }
-                    MessageEntity messageEntity = deserializer.deserializeJSON(bytes);
-                    callBack.success(messageEntity);
-                } catch (Exception e) {
-                    callBack.fail(e.getMessage());
-                }
-            });
+                });
+            } catch (Exception ex) {
+                callBack.fail(ex.getMessage());
+            }
         }
-
     }
 
-    private Map<String, Object> getHeaders(TStressTestAgentData tStressTestAgentData) {
-        Map<String, Object> headers = new HashMap<>();
-        if (tStressTestAgentData != null) {
-            headers.put("userAppKey", tStressTestAgentData.getUserAppKey());
-            headers.put("tenantAppKey", tStressTestAgentData.getTenantAppKey());
-            headers.put("userId", tStressTestAgentData.getUserId());
-            headers.put("envCode", tStressTestAgentData.getEnvCode());
-            headers.put("agentExpand", tStressTestAgentData.getAgentExpand());
-            headers.put("dataType", tStressTestAgentData.getDataType());
-            headers.put("hostIp", tStressTestAgentData.getHostIp());
-            headers.put("version", tStressTestAgentData.getVersion());
-        }
-        return headers;
-
-    }
 
 }
