@@ -168,7 +168,7 @@ public class PinpointSendServiceImpl implements MessageSendService {
         urlDataTypeMap.put("/api/application/center/app/info", DataType.APPLICATION_CENTER_APP_INFO);
         //agent心跳
         urlDataTypeMap.put("api/agent/heartbeat", DataType.API_AGENT_HEARTBEAT);
-        //影子数据源校验
+        //影子数据源校验 stress-test-api-link-ds-config-check
         urlDataTypeMap.put("/api/link/ds/configs/check", DataType.API_LINK_DS_CONFIG_CHECK);
     }
 }
