@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 public class KafkaSendServiceImpl implements MessageSendService {
 
@@ -118,17 +119,14 @@ public class KafkaSendServiceImpl implements MessageSendService {
         logData.setDataType(dataType);
         logData.setHostIp(ip);
         logData.setVersion(version + "");
-        if (DataType.PRESSURE_ENGINE_TRACE_LOG == dataType) {
-            logData.setDataType(DataType.TRACE_LOG);
-        }
         this.sendMessage(topic, key, logData, messageSendCallBack);
     }
 
-    private void sendMessage(String topic, String key, TStressTestAgentData logData, MessageSendCallBack messageSendCallBack) {
+    private synchronized void sendMessage(String topic, String key, TStressTestAgentData logData, MessageSendCallBack messageSendCallBack) {
         try {
             byte[] serialize = messageSerializer.serialize(logData, false);
             ProducerRecord<String, byte[]> producerRecord = new ProducerRecord<String, byte[]>(topic, key, serialize);
-            producer.send(producerRecord);
+            producer.send(producerRecord).get(150, TimeUnit.MILLISECONDS);
             messageSendCallBack.success();
         } catch (Exception e) {
             messageSendCallBack.fail(e.getMessage());
