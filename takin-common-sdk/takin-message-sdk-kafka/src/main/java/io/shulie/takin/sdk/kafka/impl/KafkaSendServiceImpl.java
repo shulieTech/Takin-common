@@ -126,7 +126,7 @@ public class KafkaSendServiceImpl implements MessageSendService {
         try {
             byte[] serialize = messageSerializer.serialize(logData, false);
             ProducerRecord<String, byte[]> producerRecord = new ProducerRecord<String, byte[]>(topic, key, serialize);
-            producer.send(producerRecord).get(150, TimeUnit.MILLISECONDS);
+            producer.send(producerRecord).get(100, TimeUnit.MILLISECONDS);
             messageSendCallBack.success();
         } catch (Exception e) {
             messageSendCallBack.fail(e.getMessage());
