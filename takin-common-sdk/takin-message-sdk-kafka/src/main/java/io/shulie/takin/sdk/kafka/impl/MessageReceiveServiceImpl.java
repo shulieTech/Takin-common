@@ -85,6 +85,7 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
         stringValueTopic.add("stress-test-engine-pressure-data");
         stringValueTopic.add("stress-test-agent-monitor");
         stringValueTopic.add("stress-test-api-link-ds-config-check");
+        stringValueTopic.add("stress-test-agent-trace");
     }
 
     @Override

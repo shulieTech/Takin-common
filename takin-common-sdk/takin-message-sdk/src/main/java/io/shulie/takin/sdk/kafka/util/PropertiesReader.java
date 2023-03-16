@@ -23,9 +23,6 @@ public class PropertiesReader {
         if (resourceName == null) {
             throw new IllegalArgumentException("resourceName can't be null!");
         }
-        if (!this.resourceName.startsWith("/")) {
-            this.resourceName = "/" + this.resourceName;
-        }
         init();
     }
 
@@ -37,6 +34,9 @@ public class PropertiesReader {
             if (configFile.exists()) {
                 in = new FileInputStream(configFile);
             } else {
+                if (!this.resourceName.startsWith("/")) {
+                    this.resourceName = "/" + this.resourceName;
+                }
                 in = PropertiesReader.class.getResourceAsStream(resourceName);
             }
             props.load(in);
