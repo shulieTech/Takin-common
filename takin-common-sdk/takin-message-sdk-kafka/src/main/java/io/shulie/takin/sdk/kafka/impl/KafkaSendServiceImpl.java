@@ -34,7 +34,7 @@ public class KafkaSendServiceImpl implements MessageSendService {
 
     @Override
     public void init() {
-        if (!MessageSwitchUtil.KAFKA_SDK_SWITCH) {
+        if (!MessageSwitchUtil.isKafkaSdkSwitch()) {
             LOGGER.warn("kafka开关处理关闭状态，不进行发送初始化");
             return;
         }

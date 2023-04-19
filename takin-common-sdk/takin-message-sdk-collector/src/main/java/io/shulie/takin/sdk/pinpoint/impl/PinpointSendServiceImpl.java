@@ -1,6 +1,4 @@
 package io.shulie.takin.sdk.pinpoint.impl;
-
-import cn.chinaunicom.client.UdpTransport;
 import cn.chinaunicom.pinpoint.thrift.dto.TStressTestAgentData;
 import cn.hutool.core.collection.CollectionUtil;
 import io.shulie.takin.sdk.kafka.DataType;
@@ -10,11 +8,12 @@ import io.shulie.takin.sdk.kafka.MessageSendService;
 import io.shulie.takin.sdk.kafka.entity.MessageSerializer;
 import io.shulie.takin.sdk.kafka.util.MessageSwitchUtil;
 import io.shulie.takin.sdk.kafka.util.PropertiesReader;
+import io.shulie.takin.sdk.pinpoint.udp.UdpDataSender;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.InetSocketAddress;
-import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,14 +24,17 @@ import java.util.Map;
  */
 public class PinpointSendServiceImpl implements MessageSendService {
     private static final Logger LOGGER = LoggerFactory.getLogger(PinpointSendServiceImpl.class.getName());
-    private UdpTransport udpTransport;
-    private InetSocketAddress socketAddress;
     private Map<String, Byte> urlDataTypeMap;
     private static MessageSerializer messageSerializer = new MessageSerializer();
 
+    private UdpDataSender sender;
+
+    private String host;
+    private int port = 9996;
+
     @Override
     public void init() {
-        if (!MessageSwitchUtil.KAFKA_SDK_SWITCH) {
+        if (!MessageSwitchUtil.isKafkaSdkSwitch()) {
             LOGGER.warn("pinpoint推送开关已关闭，不进行初始化");
             return;
         }
@@ -40,27 +42,26 @@ public class PinpointSendServiceImpl implements MessageSendService {
             String property = PropertiesReader.getInstance().getProperty("pradar.data.pusher.pinpoint.collector.address", "");
             LOGGER.info("获取到推送地址为:{}", property);
             String[] node = property.split(":");
-            socketAddress = new InetSocketAddress(node[0], Integer.parseInt(node[1]));
+            this.host = StringUtils.trim(node[0]);
+            if (NumberUtils.isDigits(node[1])) {
+                this.port = Integer.parseInt(StringUtils.trim(node[1]));
+            }
         } catch (Exception e) {
             LOGGER.error("解析推送地址失败", e);
         }
 
-        if (socketAddress == null) {
-            LOGGER.error("初始化KafkaSendServiceImpl socketAddress");
-            return;
-        }
-        this.createUdpTransport();
+        this.sender = new UdpDataSender(host, port, 1000 * 3, 1024 * 64 * 16, messageSerializer);
         this.initUrlDataTypeMap(null);
     }
 
     @Override
     public void stop() {
-        udpTransport.close();
+        sender.stop();
     }
 
     @Override
     public void send(String url, Map<String, String> headers, String body, MessageSendCallBack messageSendCallBack, HttpSender httpSender) {
-        if (socketAddress == null || udpTransport == null) {
+        if (sender == null) {
             httpSender.sendMessage();
             return;
         }
@@ -93,47 +94,24 @@ public class PinpointSendServiceImpl implements MessageSendService {
                 logData.setAgentExpand(headers.get("agentExpand"));
             }
         }
-        try {
-            byte[] data = messageSerializer.serialize(logData, true);
-            udpTransport.send(data);
-            messageSendCallBack.success();
-        } catch (Exception e) {
-            messageSendCallBack.fail(e.getMessage());
-            createUdpTransport();
-        }
+        sender.send(logData);
+        messageSendCallBack.success();
 
     }
 
     @Override
     public void send(byte dataType, int version, String content, String ip, MessageSendCallBack messageSendCallBack) {
-        try {
-            if (content == null) {
-                messageSendCallBack.fail("发送内容不能为空");
-            }
-            TStressTestAgentData logData = new TStressTestAgentData();
-            logData.setStringValue(content);
-            logData.setDataType(dataType);
-            logData.setHostIp(ip);
-            logData.setVersion(version + "");
-            byte[] data = messageSerializer.serialize(logData, true);
-            udpTransport.send(data);
-            messageSendCallBack.success();
-        } catch (Exception e) {
-            messageSendCallBack.fail(e.getMessage());
-            createUdpTransport();
-        }
-    }
 
-    private boolean createUdpTransport() {
-        try {
-            if (udpTransport == null || udpTransport.isClosed()) {
-                udpTransport = new UdpTransport(socketAddress);
-                return true;
-            }
-        } catch (SocketException e) {
-            LOGGER.error("初始化udp链接异常", e);
+        if (content == null) {
+            messageSendCallBack.fail("发送内容不能为空");
         }
-        return false;
+        TStressTestAgentData logData = new TStressTestAgentData();
+        logData.setStringValue(content);
+        logData.setDataType(dataType);
+        logData.setHostIp(ip);
+        logData.setVersion(version + "");
+        sender.send(logData);
+        messageSendCallBack.success();
     }
 
     /**

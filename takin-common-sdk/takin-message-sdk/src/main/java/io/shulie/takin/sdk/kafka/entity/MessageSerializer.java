@@ -55,7 +55,7 @@ public class MessageSerializer implements Serializable {
             }
             return udpThriftSerializer.serialize(tStressTestAgentData,addHeader);
         } catch (TException e) {
-            logger.error("Serialize TStressTestAgentData errror.");
+            logger.error("Serialize TStressTestAgentData error. {}", e.toString());
         }
         return null;
     }

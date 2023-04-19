@@ -60,7 +60,7 @@ public class MessageDeserializer implements Serializable {
             messageEntity.setBody(map);
             return messageEntity;
         } catch (TException e) {
-            logger.error("Serialize TStressTestAgentData errror.");
+            logger.error("Deserialize TStressTestAgentData error. {}", e.toString());
         }
         return null;
     }
@@ -91,7 +91,7 @@ public class MessageDeserializer implements Serializable {
             messageEntity.setBody(map);
             return messageEntity;
         } catch (TException e) {
-            logger.error("Serialize TStressTestAgentData errror.");
+            logger.error("Deserialize TStressTestAgentData error. {}", e.toString());
         }
         return null;
     }
