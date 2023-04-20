@@ -11,9 +11,7 @@ import io.shulie.takin.sdk.kafka.entity.MessageSerializer;
 import io.shulie.takin.sdk.kafka.util.MessageSwitchUtil;
 import io.shulie.takin.sdk.kafka.util.PropertiesReader;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -126,7 +124,14 @@ public class KafkaSendServiceImpl implements MessageSendService {
         try {
             byte[] serialize = messageSerializer.serialize(logData, false);
             ProducerRecord<String, byte[]> producerRecord = new ProducerRecord<String, byte[]>(topic, key, serialize);
-            producer.send(producerRecord).get(100, TimeUnit.MILLISECONDS);
+            producer.send(producerRecord, new Callback() {
+                public void onCompletion(RecordMetadata recordMetadata, Exception e) {
+                    //execute everytime a record is successfully sent or exception is thrown
+                    if(e != null){
+                        messageSendCallBack.fail(e.getMessage());
+                    }
+                }
+            });
             messageSendCallBack.success();
         } catch (Exception e) {
             messageSendCallBack.fail(e.getMessage());
