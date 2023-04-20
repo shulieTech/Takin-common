@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.CRC32;
 
 public class KafkaSendServiceImpl implements MessageSendService {
 
@@ -111,7 +112,10 @@ public class KafkaSendServiceImpl implements MessageSendService {
             messageSendCallBack.fail("没有通过dataType获取到对应的topic");
             return;
         }
-        String key = MD5.create().digestHex(ip + content);
+        CRC32 crc32 = new CRC32();
+        byte[] bytes = (ip + content).getBytes();
+        crc32.update(bytes, 0, bytes.length);
+        String key = Long.toHexString(crc32.getValue());
         TStressTestAgentData logData = new TStressTestAgentData();
         logData.setStringValue(content);
         logData.setDataType(dataType);
