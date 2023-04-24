@@ -2,18 +2,12 @@ package io.shulie.takin.sdk.kafka.entity;
 
 import cn.chinaunicom.client.UdpThriftSerializer;
 import cn.chinaunicom.pinpoint.thrift.dto.TStressTestAgentData;
-import org.apache.thrift.TBase;
 import org.apache.thrift.TException;
-import org.apache.thrift.protocol.TCompactProtocol;
-import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.transport.TByteBuffer;
-import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
-import java.nio.ByteBuffer;
 
 /**
  * kafka MessageDeserializer

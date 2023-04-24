@@ -10,7 +10,6 @@ import io.shulie.takin.sdk.kafka.MessageSendService;
 import io.shulie.takin.sdk.kafka.entity.MessageSerializer;
 import io.shulie.takin.sdk.kafka.util.MessageSwitchUtil;
 import io.shulie.takin.sdk.kafka.util.PropertiesReader;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.producer.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 import java.util.zip.CRC32;
 
 public class KafkaSendServiceImpl implements MessageSendService {
@@ -38,7 +36,7 @@ public class KafkaSendServiceImpl implements MessageSendService {
             return;
         }
         String serverConfig = PropertiesReader.getInstance().getProperty("kafka.sdk.bootstrap", "");
-        if (StringUtils.isBlank(serverConfig)) {
+        if (serverConfig == null || "".equals(serverConfig)) {
             LOGGER.info("kafka配置serverConfig未找到，不进行kafka发送初始化");
             return;
         }
