@@ -1,6 +1,5 @@
 package io.shulie.takin.sdk.kafka.util;
 
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -72,10 +71,10 @@ public class PropertiesReader {
      */
     public String getProperty(String key, String defaultValue) {
         String value = System.getProperty(key);
-        if (StringUtils.isBlank(value)) {
+        if (value == null || "".equals(value)) {
             value = getProperty(key);
         }
-        if (StringUtils.isBlank(value)) {
+        if (value == null || "".equals(value)) {
             return defaultValue;
         }
         return value;

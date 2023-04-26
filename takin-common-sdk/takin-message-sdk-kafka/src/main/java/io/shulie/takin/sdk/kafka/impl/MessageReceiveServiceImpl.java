@@ -1,21 +1,19 @@
 package io.shulie.takin.sdk.kafka.impl;
 
-import cn.chinaunicom.pinpoint.thrift.dto.TStressTestAgentData;
-import cn.hutool.core.collection.ListUtil;
-import com.alibaba.fastjson.JSON;
 import io.shulie.takin.sdk.kafka.MessageReceiveCallBack;
 import io.shulie.takin.sdk.kafka.MessageReceiveService;
 import io.shulie.takin.sdk.kafka.entity.MessageEntity;
 import io.shulie.takin.sdk.kafka.util.MessageSwitchUtil;
 import io.shulie.takin.sdk.kafka.util.PropertiesReader;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 public class MessageReceiveServiceImpl implements MessageReceiveService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageReceiveServiceImpl.class.getName());
@@ -48,7 +46,7 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
             LOGGER.error("读取配置文件失败", e);
         }
 
-        if (StringUtils.isBlank(serverConfig)) {
+        if (serverConfig == null || "".equals(serverConfig)) {
             LOGGER.info("kafka配置serverConfig未找到，不进行kafka发送初始化");
             return;
         }
@@ -61,7 +59,7 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
         props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 100);
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, serverConfig);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "kafka-sdk-consumer");
-        if (StringUtils.isNotBlank(groupId)) {
+        if (groupId != null && !"".equals(groupId)) {
             props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         }
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.StringDeserializer.class);
