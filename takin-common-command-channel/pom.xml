@@ -24,7 +24,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-     <version>common-2.0.2-SNAPSHOT</version>
+     <version>common-2.0.4</version>
     <artifactId>takin-common-command-channel</artifactId>
 
     <properties>
