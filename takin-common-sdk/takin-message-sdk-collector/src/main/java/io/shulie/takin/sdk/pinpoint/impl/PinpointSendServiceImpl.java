@@ -1,11 +1,14 @@
 package io.shulie.takin.sdk.pinpoint.impl;
+import cn.chinaunicom.pinpoint.thrift.dto.TStressTestAgentHeartbeatData._Fields;
 import cn.chinaunicom.pinpoint.thrift.dto.TStressTestAgentData;
+import cn.chinaunicom.pinpoint.thrift.dto.TStressTestAgentHeartbeatData;
 import cn.hutool.core.collection.CollectionUtil;
 import io.shulie.takin.sdk.kafka.DataType;
 import io.shulie.takin.sdk.kafka.HttpSender;
 import io.shulie.takin.sdk.kafka.MessageSendCallBack;
 import io.shulie.takin.sdk.kafka.MessageSendService;
 import io.shulie.takin.sdk.kafka.entity.MessageSerializer;
+import io.shulie.takin.sdk.kafka.entity.TStressTestAgentHeartbeatDTO;
 import io.shulie.takin.sdk.kafka.util.MessageSwitchUtil;
 import io.shulie.takin.sdk.kafka.util.PropertiesReader;
 import io.shulie.takin.sdk.pinpoint.udp.UdpDataSender;
@@ -112,6 +115,20 @@ public class PinpointSendServiceImpl implements MessageSendService {
         logData.setVersion(version + "");
         sender.send(logData);
         messageSendCallBack.success();
+    }
+
+    @Override
+    public void send(Object o, MessageSendCallBack messageSendCallBack, HttpSender httpSender) {
+        if (sender == null) {
+            httpSender.sendMessage();
+            return;
+        }
+        try {
+            sender.send(o);
+            messageSendCallBack.success();
+        }catch (Exception e){
+            messageSendCallBack.fail(e.getMessage());
+        }
     }
 
     /**

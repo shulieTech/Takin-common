@@ -36,26 +36,26 @@ public class MessageSerializer implements Serializable {
     private static final long serialVersionUID = -8568857619974944085L;
 
     /**
-     * 反序列化thrift对象
+     * 序列化thrift对象
      *
      * @return
      */
-    public byte[] serialize(TStressTestAgentData tStressTestAgentData,boolean addHeader) {
+    public byte[] serialize(Object o, boolean addHeader) {
 
         try {
             UdpThriftSerializer udpThriftSerializer = THREAD_LOCAL.get();
             if (udpThriftSerializer == null) {
                 return null;
             }
-            return udpThriftSerializer.serialize(tStressTestAgentData,addHeader);
+            return udpThriftSerializer.serialize(o, addHeader);
         } catch (TException e) {
-            logger.error("Serialize TStressTestAgentData error. {}", e.toString());
+            logger.error("Serialize thrift error. {}", e.toString());
         }
         return null;
     }
 
     public static void main(String[] args) throws Exception {
-        byte[] PINPOINT_COLLECTOR_HEADER = new byte[] { -17, 16, 2, 0 };
+        byte[] PINPOINT_COLLECTOR_HEADER = new byte[]{-17, 16, 2, 0};
 
         TStressTestAgentData tBaseData = new TStressTestAgentData();
         tBaseData.setDataType((byte) 15);

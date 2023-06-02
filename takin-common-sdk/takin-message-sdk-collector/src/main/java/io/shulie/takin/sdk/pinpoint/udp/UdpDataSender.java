@@ -47,7 +47,7 @@ public class UdpDataSender {
 
     }
 
-    public void send(TStressTestAgentData message) {
+    public void send(Object message) {
 
         final InetSocketAddress inetSocketAddress = socketAddressProvider.resolve();
         if (inetSocketAddress.getAddress() == null) {

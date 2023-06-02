@@ -122,6 +122,11 @@ public class KafkaSendServiceImpl implements MessageSendService {
         this.sendMessage(topic, key, logData, messageSendCallBack);
     }
 
+    @Override
+    public void send(Object o, MessageSendCallBack messageSendCallBack, HttpSender httpSender) {
+
+    }
+
     private synchronized void sendMessage(String topic, String key, TStressTestAgentData logData, MessageSendCallBack messageSendCallBack) {
         try {
             byte[] serialize = messageSerializer.serialize(logData, false);
