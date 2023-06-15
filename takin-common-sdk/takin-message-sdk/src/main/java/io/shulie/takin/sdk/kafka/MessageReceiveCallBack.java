@@ -1,10 +1,8 @@
 package io.shulie.takin.sdk.kafka;
 
-import io.shulie.takin.sdk.kafka.entity.MessageEntity;
-
 public interface MessageReceiveCallBack {
 
-    void success(MessageEntity messageEntity);
+    void success(Object o);
 
     void fail(String errorMessage);
 }

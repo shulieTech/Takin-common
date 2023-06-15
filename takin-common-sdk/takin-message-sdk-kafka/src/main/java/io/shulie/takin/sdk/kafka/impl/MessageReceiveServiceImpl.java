@@ -1,8 +1,10 @@
 package io.shulie.takin.sdk.kafka.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.shulie.takin.sdk.kafka.MessageReceiveCallBack;
 import io.shulie.takin.sdk.kafka.MessageReceiveService;
-import io.shulie.takin.sdk.kafka.entity.MessageEntity;
+import io.shulie.takin.sdk.kafka.entity.*;
 import io.shulie.takin.sdk.kafka.util.MessageSwitchUtil;
 import io.shulie.takin.sdk.kafka.util.PropertiesReader;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -11,17 +13,15 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 public class MessageReceiveServiceImpl implements MessageReceiveService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageReceiveServiceImpl.class.getName());
 
-    private KafkaConsumer<String, byte[]> kafkaConsumer;
-    private MessageDeserializer deserializer;
+    private KafkaConsumer<String, String> kafkaConsumer;
+    private ObjectMapper objMap;
     private String groupId;
-    private List<String> stringValueTopic = new ArrayList<>();
+    private final List<String> stringValueTopic = new ArrayList<>();
 
     public MessageReceiveServiceImpl() {
     }
@@ -75,15 +75,11 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
             props.put("sasl.jaas.config", saslJaasConfig);
         }
         kafkaConsumer = new KafkaConsumer<>(props);
-        try {
-            deserializer = new MessageDeserializer();
-        } catch (Exception e) {
-            LOGGER.error("初始化反序列化工具失败", e);
-        }
+
+        objMap = new ObjectMapper();
         stringValueTopic.add("stress-test-engine-pressure-data");
         stringValueTopic.add("stress-test-agent-monitor");
         stringValueTopic.add("stress-test-api-link-ds-config-check");
-        stringValueTopic.add("stress-test-agent-trace");
     }
 
     @Override
@@ -99,16 +95,34 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
         kafkaConsumer.subscribe(topics);
         while (true) {
             try {
-                ConsumerRecords<String, byte[]> consumerRecords = kafkaConsumer.poll(300);
+                ConsumerRecords<String, String> consumerRecords = kafkaConsumer.poll(300);
                 consumerRecords.forEach(record -> {
                     try {
-                        byte[] bytes = record.value();
-                        if (bytes == null) {
+                        String value = record.value();
+                        if (value == null || "".equals(value)) {
                             callBack.fail("接收到消息为空");
                             return;
                         }
-                        MessageEntity messageEntity = deserializer.deserializeJSON(bytes, stringValueTopic.contains(record.topic()));
-                        callBack.success(messageEntity);
+                        //stress-test-api-agent-heartbeat
+                        //stress-test-agent-trace
+                        //stress-test-agent-trace-payload (附加信息)
+                        switch (record.topic()) {
+                            case "stress-test-api-agent-heartbeat":
+                                TStressTestAgentHeartbeatDTO heartbeatDTO = objMap.readValue(value, TStressTestAgentHeartbeatDTO.class);
+                                callBack.success(heartbeatDTO);
+                                break;
+                            case "stress-test-agent-trace":
+                                TStressTestTraceDTO traceDTO = objMap.readValue(value, TStressTestTraceDTO.class);
+                                callBack.success(traceDTO);
+                                break;
+                            case "stress-test-agent-trace-payload":
+                                TStressTestTracePayloadDTO tracePayloadDTO = objMap.readValue(value, TStressTestTracePayloadDTO.class);
+                                callBack.success(tracePayloadDTO);
+                                break;
+                            default:
+                                TStressTestAgentDTO tStressTestAgentDTO = objMap.readValue(value, TStressTestAgentDTO.class);
+                                callBack.success(deserializeJSON(tStressTestAgentDTO, stringValueTopic.contains(record.topic())));
+                        }
                     } catch (Exception e) {
                         callBack.fail(e.getMessage());
                     }
@@ -119,5 +133,45 @@ public class MessageReceiveServiceImpl implements MessageReceiveService {
         }
     }
 
+    /**
+     * 反序列化thrift对象,转为json
+     *
+     * @param tStressTestAgentDTO
+     * @return
+     */
+    public MessageEntity deserializeJSON(TStressTestAgentDTO tStressTestAgentDTO, boolean isStringValue) {
 
+        MessageEntity messageEntity = new MessageEntity();
+        messageEntity.setHeaders(this.getHeaders(tStressTestAgentDTO));
+        Map map;
+        if (isStringValue) {
+            map = new HashMap<>();
+            map.put("content", tStressTestAgentDTO.getStringValue());
+        } else {
+            map = JSON.parseObject(tStressTestAgentDTO.getStringValue(), Map.class);
+        }
+        messageEntity.setBody(map);
+        return messageEntity;
+    }
+
+    /**
+     * 获取头信息
+     *
+     * @param agentDTO 通用对象
+     * @return
+     */
+    private Map<String, Object> getHeaders(TStressTestAgentDTO agentDTO) {
+        Map<String, Object> headers = new HashMap<>();
+        if (agentDTO != null) {
+            headers.put("userAppKey", agentDTO.getUserAppKey());
+            headers.put("tenantAppKey", agentDTO.getTenantAppKey());
+            headers.put("userId", agentDTO.getUserId());
+            headers.put("envCode", agentDTO.getEnvCode());
+            headers.put("agentExpand", agentDTO.getAgentExpand());
+            headers.put("dataType", agentDTO.getDataType());
+            headers.put("hostIp", agentDTO.getHostIp());
+            headers.put("version", agentDTO.getVersion());
+        }
+        return headers;
+    }
 }

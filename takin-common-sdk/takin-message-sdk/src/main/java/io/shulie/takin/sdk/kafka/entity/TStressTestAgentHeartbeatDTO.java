@@ -5,7 +5,7 @@ public class TStressTestAgentHeartbeatDTO {
     private String simulatorVersion;
     private String address;
     private String appName;
-    private short pid;
+    private int pid;
     private String agentLanguage;
     private long userId;
     private String agentStatus;
@@ -17,12 +17,21 @@ public class TStressTestAgentHeartbeatDTO {
     private String name;
     private String agentVersion;
     private String tenantAppKey;
-    private String service;
+    private String serviceName;
     private String md5;
     private boolean status;
     private boolean moduleLoadResult;
     private String errorCode;
     private String errorMsg;
+    private int port;
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
 
     public String getAgentId() {
         return agentId;
@@ -56,11 +65,11 @@ public class TStressTestAgentHeartbeatDTO {
         this.appName = appName;
     }
 
-    public short getPid() {
+    public int getPid() {
         return pid;
     }
 
-    public void setPid(short pid) {
+    public void setPid(int pid) {
         this.pid = pid;
     }
 
@@ -152,12 +161,12 @@ public class TStressTestAgentHeartbeatDTO {
         this.tenantAppKey = tenantAppKey;
     }
 
-    public String getService() {
-        return service;
+    public String getServiceName() {
+        return serviceName;
     }
 
-    public void setService(String service) {
-        this.service = service;
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
     }
 
     public String getMd5() {

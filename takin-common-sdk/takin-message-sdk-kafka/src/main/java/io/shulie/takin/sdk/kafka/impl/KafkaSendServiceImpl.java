@@ -1,13 +1,13 @@
 package io.shulie.takin.sdk.kafka.impl;
 
-import cn.chinaunicom.pinpoint.thrift.dto.TStressTestAgentData;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.crypto.digest.MD5;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.shulie.takin.sdk.kafka.DataType;
 import io.shulie.takin.sdk.kafka.HttpSender;
 import io.shulie.takin.sdk.kafka.MessageSendCallBack;
 import io.shulie.takin.sdk.kafka.MessageSendService;
-import io.shulie.takin.sdk.kafka.entity.MessageSerializer;
+import io.shulie.takin.sdk.kafka.entity.TStressTestAgentDTO;
 import io.shulie.takin.sdk.kafka.util.MessageSwitchUtil;
 import io.shulie.takin.sdk.kafka.util.PropertiesReader;
 import org.apache.kafka.clients.producer.*;
@@ -22,9 +22,9 @@ import java.util.zip.CRC32;
 public class KafkaSendServiceImpl implements MessageSendService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSendServiceImpl.class.getName());
-    private static MessageSerializer messageSerializer = new MessageSerializer();
-    private KafkaProducer<String, byte[]> producer;
 
+    private KafkaProducer<String, String> producer;
+    private ObjectMapper objMap;
     private Map<String, String> urlTopicMap;
 
     private Map<Byte, String> dataTypeTopicMap;
@@ -44,6 +44,8 @@ public class KafkaSendServiceImpl implements MessageSendService {
 
         String authFlag = PropertiesReader.getInstance().getProperty("kafka.auth.flag", "false");
         LOGGER.info("是否使用权限认证:{}", authFlag);
+
+        objMap = new ObjectMapper();
 
         Properties props = new Properties();
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, org.apache.kafka.common.serialization.StringSerializer.class);
@@ -81,7 +83,7 @@ public class KafkaSendServiceImpl implements MessageSendService {
             return;
         }
         String key = MD5.create().digestHex(body);
-        TStressTestAgentData logData = new TStressTestAgentData();
+        TStressTestAgentDTO logData = new TStressTestAgentDTO();
         logData.setStringValue(body);
         if (CollectionUtil.isNotEmpty(headers)) {
             if (headers.containsKey("userAppKey")) {
@@ -114,7 +116,7 @@ public class KafkaSendServiceImpl implements MessageSendService {
         byte[] bytes = (ip + content).getBytes();
         crc32.update(bytes, 0, bytes.length);
         String key = Long.toHexString(crc32.getValue());
-        TStressTestAgentData logData = new TStressTestAgentData();
+        TStressTestAgentDTO logData = new TStressTestAgentDTO();
         logData.setStringValue(content);
         logData.setDataType(dataType);
         logData.setHostIp(ip);
@@ -127,10 +129,10 @@ public class KafkaSendServiceImpl implements MessageSendService {
 
     }
 
-    private synchronized void sendMessage(String topic, String key, TStressTestAgentData logData, MessageSendCallBack messageSendCallBack) {
+    private synchronized void sendMessage(String topic, String key, TStressTestAgentDTO logData, MessageSendCallBack messageSendCallBack) {
         try {
-            byte[] serialize = messageSerializer.serialize(logData, false);
-            ProducerRecord<String, byte[]> producerRecord = new ProducerRecord<String, byte[]>(topic, key, serialize);
+            String objStr = objMap.writeValueAsString(logData);
+            ProducerRecord<String, String> producerRecord = new ProducerRecord<String, String>(topic, key, objStr);
             producer.send(producerRecord, new Callback() {
                 public void onCompletion(RecordMetadata recordMetadata, Exception e) {
                     //execute everytime a record is successfully sent or exception is thrown

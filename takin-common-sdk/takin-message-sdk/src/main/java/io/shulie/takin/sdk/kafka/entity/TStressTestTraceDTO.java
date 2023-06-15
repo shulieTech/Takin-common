@@ -1,13 +1,10 @@
 package io.shulie.takin.sdk.kafka.entity;
 
 
-public class TStressTestReduceTraceDTO {
+public class TStressTestTraceDTO extends TStressTestBaseDTO{
     private String traceId;
-    private long timestamp;
-    private String agentId;
     private String invokeId;
     private int invokeType;
-    private String appName;
     private int cost;
     private String middlewareName;
     private String serviceName;
@@ -29,22 +26,6 @@ public class TStressTestReduceTraceDTO {
         this.traceId = traceId;
     }
 
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public String getAgentId() {
-        return agentId;
-    }
-
-    public void setAgentId(String agentId) {
-        this.agentId = agentId;
-    }
-
     public String getInvokeId() {
         return invokeId;
     }
@@ -59,14 +40,6 @@ public class TStressTestReduceTraceDTO {
 
     public void setInvokeType(int invokeType) {
         this.invokeType = invokeType;
-    }
-
-    public String getAppName() {
-        return appName;
-    }
-
-    public void setAppName(String appName) {
-        this.appName = appName;
     }
 
     public int getCost() {
