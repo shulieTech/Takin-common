@@ -1,19 +1,15 @@
 package io.shulie.takin.sdk.pinpoint.impl;
-import cn.chinaunicom.pinpoint.thrift.dto.TStressTestAgentHeartbeatData._Fields;
+
 import cn.chinaunicom.pinpoint.thrift.dto.TStressTestAgentData;
-import cn.chinaunicom.pinpoint.thrift.dto.TStressTestAgentHeartbeatData;
 import cn.hutool.core.collection.CollectionUtil;
 import io.shulie.takin.sdk.kafka.DataType;
 import io.shulie.takin.sdk.kafka.HttpSender;
 import io.shulie.takin.sdk.kafka.MessageSendCallBack;
 import io.shulie.takin.sdk.kafka.MessageSendService;
 import io.shulie.takin.sdk.kafka.entity.MessageSerializer;
-import io.shulie.takin.sdk.kafka.entity.TStressTestAgentHeartbeatDTO;
 import io.shulie.takin.sdk.kafka.util.MessageSwitchUtil;
 import io.shulie.takin.sdk.kafka.util.PropertiesReader;
 import io.shulie.takin.sdk.pinpoint.udp.UdpDataSender;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,14 +41,12 @@ public class PinpointSendServiceImpl implements MessageSendService {
             String property = PropertiesReader.getInstance().getProperty("pradar.data.pusher.pinpoint.collector.address", "");
             LOGGER.info("获取到推送地址为:{}", property);
             String[] node = property.split(":");
-            this.host = StringUtils.trim(node[0]);
-            if (NumberUtils.isDigits(node[1])) {
-                this.port = Integer.parseInt(StringUtils.trim(node[1]));
-            }
+            this.host = node[0].trim();
+            this.port = Integer.parseInt(node[1].trim());
         } catch (Exception e) {
             LOGGER.error("解析推送地址失败", e);
+            return;
         }
-
         this.sender = new UdpDataSender(host, port, 1000 * 3, 1024 * 64 * 16, messageSerializer);
         this.initUrlDataTypeMap(null);
     }

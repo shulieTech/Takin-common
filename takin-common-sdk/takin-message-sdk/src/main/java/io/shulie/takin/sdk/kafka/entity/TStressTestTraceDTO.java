@@ -14,9 +14,18 @@ public class TStressTestTraceDTO extends TStressTestBaseDTO{
     private boolean debugTest;
     private boolean entrance;
     private boolean server;
+    private String entranceId;
     private String upAppName;
     private String remoteIp;
     private int port;
+
+    public String getEntranceId() {
+        return entranceId;
+    }
+
+    public void setEntranceId(String entranceId) {
+        this.entranceId = entranceId;
+    }
 
     public String getTraceId() {
         return traceId;
