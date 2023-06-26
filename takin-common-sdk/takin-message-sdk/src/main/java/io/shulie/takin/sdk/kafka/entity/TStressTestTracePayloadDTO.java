@@ -5,6 +5,8 @@ public class TStressTestTracePayloadDTO extends TStressTestBaseDTO {
     private String invokeId;
     private int invokeType;
     private boolean pressureTest;
+    private boolean entrance;
+    private boolean server;
     private String middlewareName;
     private String serviceName;
     private String methodName;
@@ -15,6 +17,23 @@ public class TStressTestTracePayloadDTO extends TStressTestBaseDTO {
     private int responseSize;
     private String ext;
     private String rpcContent;
+
+
+    public boolean isEntrance() {
+        return entrance;
+    }
+
+    public void setEntrance(boolean entrance) {
+        this.entrance = entrance;
+    }
+
+    public boolean isServer() {
+        return server;
+    }
+
+    public void setServer(boolean server) {
+        this.server = server;
+    }
 
     public boolean isPressureTest() {
         return pressureTest;
