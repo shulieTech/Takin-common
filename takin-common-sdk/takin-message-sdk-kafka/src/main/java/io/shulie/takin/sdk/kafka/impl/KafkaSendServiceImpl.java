@@ -189,6 +189,8 @@ public class KafkaSendServiceImpl implements MessageSendService {
         urlTopicMap.put("api/agent/heartbeat", "stress-test-api-agent-heartbeat");
         //压力引擎聚合数据
         urlTopicMap.put("engine/pressure/data", "stress-test-engine-pressure-data");
+        //应用配置版本校验
+        urlTopicMap.put("application-conf-check", "stress-test-application-config-ack");
     }
 
     /**
@@ -223,6 +225,8 @@ public class KafkaSendServiceImpl implements MessageSendService {
         dataTypeTopicMap.put(DataType.AGENT_PUSH_APPLICATION_MIDDLEWARE, "stress-test-agent-push-application-middleware");
         //agent版本更新
         dataTypeTopicMap.put(DataType.CONFCENTER_APPLICATIONMNT_UPDATE_APPLICATIONAGENT, "stress-test-confcenter-applicationmnt-update-applicationagent");
+        //应用配置版本信息上报
+        dataTypeTopicMap.put(DataType.APPLICATION_CONFIG_ACK, "stress-test-application-config-ack");
     }
 
 }

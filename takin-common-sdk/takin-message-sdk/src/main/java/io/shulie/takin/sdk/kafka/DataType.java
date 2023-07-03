@@ -19,6 +19,7 @@ public class DataType {
     public static final byte APPLICATION_CENTER_APP_INFO = 16;
     public static final byte API_AGENT_HEARTBEAT = 17;
     public static final byte API_LINK_DS_CONFIG_CHECK = 18;
+    public static final byte APPLICATION_CONFIG_ACK = 19;
 
     public DataType() {
     }

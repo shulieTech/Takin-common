@@ -24,7 +24,7 @@ import java.util.Map;
 public class PinpointSendServiceImpl implements MessageSendService {
     private static final Logger LOGGER = LoggerFactory.getLogger(PinpointSendServiceImpl.class.getName());
     private Map<String, Byte> urlDataTypeMap;
-    private static MessageSerializer messageSerializer = new MessageSerializer();
+    private static final MessageSerializer messageSerializer = new MessageSerializer();
 
     private UdpDataSender sender;
 
@@ -161,5 +161,7 @@ public class PinpointSendServiceImpl implements MessageSendService {
         urlDataTypeMap.put("api/agent/heartbeat", DataType.API_AGENT_HEARTBEAT);
         //影子数据源校验 stress-test-api-link-ds-config-check
         urlDataTypeMap.put("/api/link/ds/configs/check", DataType.API_LINK_DS_CONFIG_CHECK);
+        //应用配置版本校验
+        urlDataTypeMap.put("/application/config/ack", DataType.APPLICATION_CONFIG_ACK);
     }
 }
