@@ -1,7 +1,7 @@
 package io.shulie.takin.sdk.pinpoint.impl;
 
-import cn.chinaunicom.pinpoint.thrift.dto.TStressTestAgentData;
 import cn.hutool.core.collection.CollectionUtil;
+import io.shulie.takin.pinpoint.thrift.dto.TStressTestAgentData;
 import io.shulie.takin.sdk.kafka.DataType;
 import io.shulie.takin.sdk.kafka.HttpSender;
 import io.shulie.takin.sdk.kafka.MessageSendCallBack;

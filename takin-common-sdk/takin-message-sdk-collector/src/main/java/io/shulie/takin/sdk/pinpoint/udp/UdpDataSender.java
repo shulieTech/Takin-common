@@ -1,6 +1,5 @@
 package io.shulie.takin.sdk.pinpoint.udp;
 
-import cn.chinaunicom.pinpoint.thrift.dto.TStressTestAgentData;
 import io.shulie.takin.sdk.kafka.entity.MessageSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
