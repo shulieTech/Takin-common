@@ -65,6 +65,7 @@
         <module>takin-common-sdk</module>
         <module>takin-common-job</module>
         <module>takin-common-command-channel</module>
+        <module>pinpoint-collector-client</module>
     </modules>
 
     <dependencyManagement>
