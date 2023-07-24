@@ -3,10 +3,15 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>takin-common</artifactId>
+        <groupId>io.shulie.takin</groupId>
+        <version>common-2.0.2-SNAPSHOT</version>
+    </parent>
 
-    <groupId>io.shulie.takin</groupId>
     <artifactId>pinpoint-collector-client</artifactId>
     <version>1.0.2</version>
+
     <build>
         <plugins>
             <plugin>
@@ -23,19 +28,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <distributionManagement>
-        <repository>
-            <id>ossrh</id>
-            <name>ossrh Releases Repository</name>
-            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <name>ossrh Releases Repository</name>
-            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </snapshotRepository>
-    </distributionManagement>
     
     <dependencies>
         <dependency>
