@@ -27,6 +27,7 @@ public class ZkClientConfig {
     private int connectionTimeoutMillis = 30000;
     private int sessionTimeoutMillis = 60000;
     private String threadName = "curator";
+    private String digest;
 
 
     public ZkClientConfig() {
@@ -69,5 +70,13 @@ public class ZkClientConfig {
 
     public void setThreadName(String threadName) {
         this.threadName = threadName;
+    }
+
+    public String getDigest() {
+        return digest;
+    }
+
+    public void setDigest(String digest) {
+        this.digest = digest;
     }
 }

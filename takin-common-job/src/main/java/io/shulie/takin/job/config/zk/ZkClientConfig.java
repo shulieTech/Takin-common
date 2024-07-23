@@ -27,6 +27,7 @@ public class ZkClientConfig {
     private int connectionTimeoutMillis = 30000;
     private int sessionTimeoutMillis = 60000;
     private String threadName = "elastic-job";
+    private String digest;
     /**
      * 命令空间
      */
@@ -81,5 +82,12 @@ public class ZkClientConfig {
 
     public void setNamespace(String namespace) {
         this.namespace = namespace;
+    }
+
+    public String getDigest() {
+        return digest;
+    }
+    public void setDigest(String digest) {
+        this.digest = digest;
     }
 }

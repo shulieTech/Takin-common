@@ -48,6 +48,7 @@ public class ElasticRegCenterConfig {
             zkClientConfig.getNamespace());
         zookeeperConfiguration.setConnectionTimeoutMilliseconds(zkClientConfig.getConnectionTimeoutMillis());
         zookeeperConfiguration.setSessionTimeoutMilliseconds(zkClientConfig.getSessionTimeoutMillis());
+        zookeeperConfiguration.setDigest(zkClientConfig.getDigest());
         ZookeeperRegistryCenter zookeeperRegistryCenter = new ZookeeperRegistryCenter(zookeeperConfiguration);
         zookeeperRegistryCenter.init();
         return zookeeperRegistryCenter;

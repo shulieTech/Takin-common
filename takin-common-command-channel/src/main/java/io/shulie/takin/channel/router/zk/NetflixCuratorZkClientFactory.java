@@ -56,7 +56,7 @@ public class NetflixCuratorZkClientFactory {
         String path = ZooKeeper.class.getProtectionDomain().getCodeSource().getLocation().toString();
         logger.info("Load ZooKeeper from {}", path);
 
-        CuratorFramework client = CuratorFrameworkFactory.builder()
+        CuratorFrameworkFactory.Builder zkBuilder = CuratorFrameworkFactory.builder()
                 .connectString(spec.getZkServers())
                 .retryPolicy(new ExponentialBackoffRetry(1000, 3))
                 .connectionTimeoutMs(spec.getConnectionTimeoutMillis())
@@ -66,8 +66,11 @@ public class NetflixCuratorZkClientFactory {
                     public Thread newThread(Runnable r) {
                         return new Thread(r, spec.getThreadName());
                     }
-                })
-                .build();
+                });
+        if (!StringUtils.isBlank(spec.getDigest())){
+            zkBuilder.authorization("digest",spec.getDigest().getBytes());
+        }
+        CuratorFramework client = zkBuilder.build();
         client.start();
         logger.info("ZkClient started: {}", spec.getZkServers());
         NetflixCuratorZkClient theClient = new NetflixCuratorZkClient(client, spec.getZkServers());
