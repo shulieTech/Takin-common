@@ -20,7 +20,7 @@
     <parent>
         <artifactId>takin-common-parent</artifactId>
         <groupId>io.shulie.takin</groupId>
-        <version>2.1.0</version>
+        <version>common-2.0.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
